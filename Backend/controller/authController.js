@@ -31,4 +31,13 @@ const login = async (req, res) => {
     res.json({ message: 'Login exitoso' });
 };
 
-module.exports = { register, login };
+const getUsers = async ( req, res) => {
+    try {
+        const users = await readData(usersFilePath);
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: "Error al obtener usuarios" });
+    }
+};
+
+module.exports = { register, login, getUsers };

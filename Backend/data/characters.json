@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Catarina",
+    "health": 1000,
+    "damage": 20,
+    "elementId": "hero",
+    "healthBarId": "hero-health",
+    "statusId": "hero-status",
+    "image": "catarina.png"
+  },
+  {
+    "id": 2,
+    "name": "Artorias",
+    "health": 1000,
+    "damage": 25,
+    "elementId": "enemy",
+    "healthBarId": "enemy-health",
+    "statusId": "enemy-status",
+    "image": "artorias.png"
+  },
+  {
+    "id": 3,
+    "name": "Mordecai",
+    "health": 1000,
+    "damage": 25,
+    "elementId": "hero",
+    "healthBarId": "enemy-health",
+    "statusId": "enemy-status",
+    "image": "artorias.png"
+  },
+  {
+    "id": 4,
+    "name": "Rigby",
+    "health": 1000,
+    "damage": 25,
+    "elementId": "enemy",
+    "healthBarId": "enemy-health",
+    "statusId": "enemy-status",
+    "image": "artorias.png"
+  },
+  {
+    "id": 5,
+    "name": "Jake",
+    "health": 1000,
+    "damage": 25,
+    "elementId": "hero",
+    "healthBarId": "enemy-health",
+    "statusId": "enemy-status",
+    "image": "artorias.png"
+  },
+  {
+    "id": 6,
+    "name": "Finn",
+    "health": 1000,
+    "damage": 25,
+    "elementId": "enemy",
+    "healthBarId": "enemy-health",
+    "statusId": "enemy-status",
+    "image": "artorias.png"
+  }
+]
