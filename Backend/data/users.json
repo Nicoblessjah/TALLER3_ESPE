@@ -1,2 +1,6 @@
-[]
-  
+[
+  {
+    "username": "nuevoUsuario",
+    "password": "password123"
+  }
+]

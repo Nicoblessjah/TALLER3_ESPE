@@ -1,4 +1,3 @@
-// backend/controllers/characterController.js
 const { readData } = require('../utils/fileHelper');
 const charactersFilePath = './data/characters.json';
 
