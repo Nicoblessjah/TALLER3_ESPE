@@ -1,11 +1,9 @@
 <template>
-  <div>
+  <div class="menu-container">
     <h1>Épicas Batallas de Rap del Frikismo</h1>
-    <div class="menu-container">
-      <router-link to="/seleccionar">Seleccionar Personaje</router-link>
-    </div>
-    <div class="lore-container">
-      <router-link to="/lore">Ver Lore</router-link>
+    <div class="menu-links">
+      <router-link to="/seleccionar" class="menu-link">Seleccionar Personaje</router-link>
+      <router-link to="/lore" class="menu-link">Ver Lore</router-link>
     </div>
   </div>
 </template>
@@ -23,47 +21,53 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 h1 {
-  font-family: Arial, sans-serif;
+  font-family: 'Press Start 2P', cursive;
+  color: #fff;
+  font-size: 30px;
+  margin-bottom: 30px;
   text-align: center;
-  color: white;
-  margin-bottom: 20px;
 }
 
 .menu-container {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-button {
-  padding: 10px 20px;
+.menu-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-link {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 15px 30px;
+  margin: 10px;
+  font-family: 'Press Start 2P', cursive;
   font-size: 16px;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: rgba(0, 0, 0, 0.9);
-}
-
-.lore-container {
-  margin-top: 30px;
-}
-
-router-link {
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
   text-decoration: none;
+  display: block;
+  text-align: center;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  transition: background 0.3s, border-color 0.3s;
 }
 
-router-link:hover {
-  background-color: #555;
+.menu-link:hover {
+  background: #ffcc00;
+  border-color: #ffcc00;
 }
 </style>
 
