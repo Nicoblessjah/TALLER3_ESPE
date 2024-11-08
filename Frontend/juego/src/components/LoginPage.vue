@@ -29,36 +29,42 @@ export default {
           password: this.password,
         });
 
-        // Si el login es exitoso, redirige a la página de menú
         alert(response.data.message);
         this.$router.push('/menu');  // Redirige a /menu
-
       } catch (error) {
-        alert(error.response.data.message);  // Muestra el mensaje de error si no es exitoso
+        alert(error.response.data.message);  // Muestra el mensaje de error
       }
     },
   },
+  mounted() {
+    document.body.classList.add('login-background');
+  },
+  beforeUnmount() {
+    document.body.classList.remove('login-background');
+  }
 };
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 body {
-  background-color: #1a1a1a;
+  margin: 0;  /* Elimina cualquier margen del body */
   font-family: 'Press Start 2P', cursive;
+  background-color: transparent; /* Asegúrate de que no haya fondo por defecto */
 }
 
 .login-container {
   display: flex;
   flex-direction: column;
-  margin: 0;
   align-items: center;
   justify-content: center;
   height: 100vh;
   color: #fff;
   text-align: center;
-  background-image: url("../assets/portada2.jpg");
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 h2 {
@@ -108,5 +114,19 @@ h2 {
 
 .pixel-link:hover {
   text-decoration: underline;
+}
+</style>
+
+<style>
+.login-background {
+  background-image: url("../assets/portada2.jpg");
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>

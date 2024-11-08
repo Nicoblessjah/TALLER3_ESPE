@@ -35,14 +35,22 @@ export default {
       }
     },
   },
+  mounted() {
+    document.body.classList.add('register-background');
+  },
+  beforeUnmount() {
+    document.body.classList.remove('register-background');
+  }
 };
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 body {
-  background-color: #1a1a1a;
+  margin: 0; /* Elimina cualquier margen del body */
   font-family: 'Press Start 2P', cursive;
+  background-color: transparent; /* Asegúrate de que no haya fondo por defecto */
 }
 
 .register-container {
@@ -53,8 +61,9 @@ body {
   height: 100vh;
   color: #fff;
   text-align: center;
-  background-image: url("../assets/portada2.jpg");
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 h2 {
@@ -105,5 +114,18 @@ h2 {
 .pixel-link:hover {
   text-decoration: underline;
 }
+</style>
 
+<style>
+.register-background {
+  background-image: url("../assets/portada2.jpg");
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>
