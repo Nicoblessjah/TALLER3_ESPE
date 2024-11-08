@@ -1,6 +1,9 @@
-<script setup>
-
+<script>
+export default {
+  name: 'SeleccionarPersonaje'
+}
 </script>
+
 
 <template>
   <body>
@@ -10,19 +13,15 @@
       <h2>Jugador 1</h2>
       <div class="carousel" id="carousel1">
         <div class="character" data-character="Finn" onclick="selectCharacter(1, 'Finn')">
-          <img src="./assets/finn/finnselect.png" alt="Finn">
           <p>Finn</p>
         </div>
         <div class="character" data-character="Mordecai" onclick="selectCharacter(1, 'Mordecai')">
-          <img src="./assets/mordecai/mordecaiselect.png" alt="Mordecai">
           <p>Mordecai</p>
         </div>
         <div class="character" data-character="Rigby" onclick="selectCharacter(1, 'Rigby')">
-          <img src="./assets/rigby/rigbyselect.png" alt="Rigby">
           <p>Rigby</p>
         </div>
         <div class="character" data-character="Jake" onclick="selectCharacter(1, 'Jake')">
-          <img src="./assets/jake/jakeselect.png" alt="Jake">
           <p>Jake</p>
         </div>
       </div>
@@ -35,19 +34,15 @@
       <h2>Jugador 2</h2>
       <div class="carousel" id="carousel2">
         <div class="character" data-character="Finn" onclick="selectCharacter(2, 'Finn')">
-          <img src="./assets/finn/finnselect.png" alt="Finn">
           <p>Finn</p>
         </div>
         <div class="character" data-character="Mordecai" onclick="selectCharacter(2, 'Mordecai')">
-          <img src="./assets/mordecai/mordecaiselect.png" alt="Mordecai">
           <p>Mordecai</p>
         </div>
         <div class="character" data-character="Rigby" onclick="selectCharacter(2, 'Rigby')">
-          <img src="./assets/rigby/rigbyselect.png" alt="Rigby">
           <p>Rigby</p>
         </div>
         <div class="character" data-character="Jake" onclick="selectCharacter(2, 'Jake')">
-          <img src="./assets/jake/jakeselect.png" alt="Jake">
           <p>Jake</p>
         </div>
       </div>
@@ -58,8 +53,8 @@
   </div>
 
   <div class="buttons">
-    <button id="start-game-button" class="btn" disabled>Iniciar Juego</button>
-    <button id="back-button" class="btn">Volver</button>
+    <button class="btn"> <router-link :to="{ path: '/pelea'}" >Iniciar Juego</router-link> </button>
+    <button class="btn"> <router-link :to="{ path: '/menu'}" >Volver</router-link> </button>
   </div>
   <audio id="click-sound" src="./assets/boton.mp3"></audio>
   </body>

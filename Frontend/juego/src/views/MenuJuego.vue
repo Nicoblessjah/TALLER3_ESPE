@@ -1,16 +1,17 @@
-<script setup>
-
-</script>
-
 <template>
-  <body>
-  <h1>Épicas Batallas de Rap del Frikismo</h1>
-  <div class="menu-container">
-    <button id="start-game-button">Iniciar Juego</button>
+  <div>
+    <h1>Épicas Batallas de Rap del Frikismo</h1>
+    <div class="menu-container">
+      <router-link to="/seleccionar">Seleccionar Personaje</router-link>
+    </div>
   </div>
-  </body>
-
 </template>
+
+<script>
+export default {
+  name: 'MenuJuego'
+}
+</script>
 
 <style scoped>
 body {

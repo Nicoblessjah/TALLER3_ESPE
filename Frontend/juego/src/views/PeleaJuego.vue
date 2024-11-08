@@ -1,5 +1,7 @@
-<script setup>
-
+<script>
+export default {
+  name: 'PeleaJuego'
+}
 </script>
 
 <template>
@@ -28,11 +30,10 @@
     </div>
   </div>
   <div class="buttons">
-    <a href="menu.html">
-      <button style="color: red;" id="exit-button">Salir</button>
-    </a>
-    <a class="btn-personajes"  href="select_character.html" id="change-character-button">Cambiar Personaje</a>
+    <button class="btn-personajes"> <router-link :to="{ path: '/menu'}" >Salir</router-link> </button>
+    <button class="btn-personajes"> <router-link :to="{ path: '/seleccionar'}" >Cambiar Personaje</router-link> </button>
   </div>
+
   </body>
 
 </template>
