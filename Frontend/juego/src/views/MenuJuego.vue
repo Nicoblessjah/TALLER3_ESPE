@@ -4,6 +4,9 @@
     <div class="menu-container">
       <router-link to="/seleccionar">Seleccionar Personaje</router-link>
     </div>
+    <div class="lore-container">
+      <router-link to="/lore">Ver Lore</router-link>
+    </div>
   </div>
 </template>
 
@@ -49,5 +52,22 @@ button {
 
 button:hover {
   background-color: rgba(0, 0, 0, 0.9);
+}
+
+.lore-container {
+  margin-top: 30px;
+}
+
+router-link {
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+router-link:hover {
+  background-color: #555;
 }
 </style>
