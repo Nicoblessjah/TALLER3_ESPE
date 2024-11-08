@@ -32,12 +32,14 @@
     </div>
 
     <div class="buttons">
-      <button class="btn" :disabled="!selectedCharacter1 || !selectedCharacter2">
-        <router-link :to="{ path: '/pelea' }">Iniciar Juego</router-link>
-      </button>
-      <button class="btn">
-        <router-link :to="{ path: '/menu' }">Volver</router-link>
-      </button>
+      <router-link to="/pelea" class="menu-link" :class="{ 'disabled-link': !selectedCharacter1 || !selectedCharacter2 }">
+        <button class="btn" :disabled="!selectedCharacter1 || !selectedCharacter2">
+          Iniciar Juego
+        </button>
+      </router-link>
+      <router-link to="/menu" class="menu-link">
+        <button class="btn">Volver</button>
+      </router-link>
     </div>
   </div>
 </template>
@@ -201,14 +203,33 @@ h1, h2 {
 }
 
 button {
-  margin: 5px;
-  padding: 10px 20px;
+  padding: 15px 30px;
   font-size: 16px;
+  background-color: #333;
+  color: white;
+  border: 2px solid #fff;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 button:disabled {
   background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover {
+  background-color: #ffcc00;
+  border-color: #ffcc00;
+}
+
+.menu-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.disabled-link button {
+  background-color: #777;
   cursor: not-allowed;
 }
 </style>
