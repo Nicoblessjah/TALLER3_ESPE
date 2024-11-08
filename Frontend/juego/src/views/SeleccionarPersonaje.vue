@@ -1,63 +1,113 @@
 <script>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
 export default {
-  name: 'SeleccionarPersonaje'
-}
+  name: 'SeleccionarPersonaje',
+  setup() {
+    const characters = ref([]);
+    const selectedCharacter1 = ref(null);
+    const selectedCharacter2 = ref(null);
+
+    // Función para obtener los personajes desde el backend
+    const fetchCharacters = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/characters');
+        characters.value = response.data;
+      } catch (error) {
+        console.error("Error al obtener los personajes:", error);
+      }
+    };
+
+    // Función para seleccionar el personaje de un jugador
+    const selectCharacter = (player, character) => {
+      if (player === 1) {
+        selectedCharacter1.value = character;
+        document.getElementById('selected-character1').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
+      } else {
+        selectedCharacter2.value = character;
+        document.getElementById('selected-character2').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
+      }
+    };
+
+    // Función para mover al siguiente personaje en el carrusel
+    const nextCharacter = (carouselId) => {
+      const carousel = document.getElementById(carouselId);
+      if (carousel && carousel.firstElementChild) {
+        const firstCharacter = carousel.firstElementChild;
+        carousel.appendChild(firstCharacter);
+      }
+    };
+
+    // Función para mover al personaje anterior en el carrusel
+    const prevCharacter = (carouselId) => {
+      const carousel = document.getElementById(carouselId);
+      if (carousel && carousel.lastElementChild) {
+        const lastCharacter = carousel.lastElementChild;
+        carousel.insertBefore(lastCharacter, carousel.firstElementChild); 
+      }
+    };
+
+    // Ejecutar fetchCharacters cuando el componente se monte
+    onMounted(() => {
+      fetchCharacters();
+    });
+
+    // Retornar valores y funciones para usar en el template
+    return {
+      characters,
+      selectedCharacter1,
+      selectedCharacter2,
+      selectCharacter,
+      nextCharacter,
+      prevCharacter
+    };
+  },
+};
 </script>
 
-
 <template>
-  <body>
-  <h1>Seleccionar Personaje</h1>
-  <div class="character-selection">
-    <div class="player-selection">
-      <h2>Jugador 1</h2>
-      <div class="carousel" id="carousel1">
-        <div class="character" data-character="Finn" onclick="selectCharacter(1, 'Finn')">
-          <p>Finn</p>
+  <div>
+    <h1>Seleccionar Personaje</h1>
+    <div class="character-selection">
+      <div class="player-selection">
+        <h2>Jugador 1</h2>
+        <div class="carousel" id="carousel1">
+          <div v-for="character in characters" :key="character.id" class="character"
+               @click="selectCharacter(1, character)">
+            <p>{{ character.name }}</p>
+            <img :src="'http://localhost:3000/assets/' + character.image" alt="Character image"/>
+          </div>
         </div>
-        <div class="character" data-character="Mordecai" onclick="selectCharacter(1, 'Mordecai')">
-          <p>Mordecai</p>
-        </div>
-        <div class="character" data-character="Rigby" onclick="selectCharacter(1, 'Rigby')">
-          <p>Rigby</p>
-        </div>
-        <div class="character" data-character="Jake" onclick="selectCharacter(1, 'Jake')">
-          <p>Jake</p>
-        </div>
+        <button class="prev" @click="prevCharacter('carousel1')">&#10094;</button>
+        <button class="next" @click="nextCharacter('carousel1')">&#10095;</button>
+        <div id="selected-character1" class="selected-character"></div>
       </div>
-      <button class="prev" onclick="prevCharacter('carousel1')">&#10094;</button>
-      <button class="next" onclick="nextCharacter('carousel1')">&#10095;</button>
-      <div id="selected-character1" class="selected-character"></div>
+
+      <div class="player-selection">
+        <h2>Jugador 2</h2>
+        <div class="carousel" id="carousel2">
+          <div v-for="character in characters" :key="character.id" class="character"
+               @click="selectCharacter(2, character)">
+            <p>{{ character.name }}</p>
+            <img :src="'http://localhost:3000/assets/' + character.image" alt="Character image"/>
+          </div>
+        </div>
+        <button class="prev" @click="prevCharacter('carousel2')">&#10094;</button>
+        <button class="next" @click="nextCharacter('carousel2')">&#10095;</button>
+        <div id="selected-character2" class="selected-character"></div>
+      </div>
     </div>
 
-    <div class="player-selection">
-      <h2>Jugador 2</h2>
-      <div class="carousel" id="carousel2">
-        <div class="character" data-character="Finn" onclick="selectCharacter(2, 'Finn')">
-          <p>Finn</p>
-        </div>
-        <div class="character" data-character="Mordecai" onclick="selectCharacter(2, 'Mordecai')">
-          <p>Mordecai</p>
-        </div>
-        <div class="character" data-character="Rigby" onclick="selectCharacter(2, 'Rigby')">
-          <p>Rigby</p>
-        </div>
-        <div class="character" data-character="Jake" onclick="selectCharacter(2, 'Jake')">
-          <p>Jake</p>
-        </div>
-      </div>
-      <button class="prev" onclick="prevCharacter('carousel2')">&#10094;</button>
-      <button class="next" onclick="nextCharacter('carousel2')">&#10095;</button>
-      <div id="selected-character2" class="selected-character"></div>
+    <div class="buttons">
+      <button class="btn" :disabled="!selectedCharacter1 || !selectedCharacter2">
+        <router-link :to="{ path: '/pelea' }">Iniciar Juego</router-link>
+      </button>
+      <button class="btn">
+        <router-link :to="{ path: '/menu' }">Volver</router-link>
+      </button>
     </div>
   </div>
-
-  <div class="buttons">
-    <button class="btn"> <router-link :to="{ path: '/pelea'}" >Iniciar Juego</router-link> </button>
-    <button class="btn"> <router-link :to="{ path: '/menu'}" >Volver</router-link> </button>
-  </div>
-  <audio id="click-sound" src="./assets/boton.mp3"></audio>
-  </body>
 </template>
 
 <style scoped>
@@ -77,12 +127,9 @@ body {
 h1 {
   color: rgb(255, 255, 255);
 }
-h2{
-  color: #ffffff;
-}
 
-.btn{
-  border-radius: 15px;
+h2 {
+  color: #ffffff;
 }
 
 .character-selection {
@@ -120,6 +167,7 @@ h2{
   background-size: 400px;
   transition: transform 0.2s;
 }
+
 .character img {
   position: relative;
   max-width: 90%;
@@ -169,7 +217,10 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-
 }
 
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 </style>
