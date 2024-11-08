@@ -64,8 +64,8 @@ export default {
       const selectedHero = JSON.parse(localStorage.getItem('selectedHero'));
       const selectedEnemy = JSON.parse(localStorage.getItem('selectedEnemy'));
 
-      hero.value = { ...hero.value, ...selectedHero };
-      enemy.value = { ...enemy.value, ...selectedEnemy };
+      hero.value = {...hero.value, ...selectedHero};
+      enemy.value = {...enemy.value, ...selectedEnemy};
     };
 
     const handleKeyDown = (event) => {
@@ -120,11 +120,13 @@ export default {
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('keyup', handleKeyUp);
       updateGame();
+      document.body.classList.add('fight-background');
     });
 
     onUnmounted(() => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      document.body.classList.remove('fight-background');
     });
 
     return {
@@ -138,20 +140,9 @@ export default {
 </script>
 
 <style scoped>
-body {
+h1 {
   font-family: Arial, sans-serif;
   text-align: center;
-  background-image: url("../assets/background.jpg");
-  background-size: cover;
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-h1 {
   color: rgb(255, 255, 255);
   font-family: 'Courier New', Courier, monospace;
 }
@@ -235,5 +226,20 @@ button {
   padding: 10px 20px;
   border-radius: 15px;
   text-decoration: none;
+}
+</style>
+
+<style>
+.fight-background {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-image: url("../assets/background.jpg");
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>

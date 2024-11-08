@@ -12,25 +12,20 @@
 
 <script>
 export default {
-  name: 'MenuJuego'
+  name: 'MenuJuego',
+  mounted() {
+    document.body.classList.add('menu-background');
+  },
+  beforeUnmount() {
+    document.body.classList.remove('menu-background');
+  }
 }
 </script>
 
 <style scoped>
-body {
+h1 {
   font-family: Arial, sans-serif;
   text-align: center;
-  background-image: url("../assets/portada2.jpg");
-  background-size: cover;
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-h1 {
   color: white;
   margin-bottom: 20px;
 }
@@ -69,5 +64,18 @@ router-link {
 
 router-link:hover {
   background-color: #555;
+}
+</style>
+
+<style>
+.menu-background {
+  background-image: url("../assets/portada2.jpg");
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>

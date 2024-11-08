@@ -1,71 +1,3 @@
-<script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-
-export default {
-  name: 'SeleccionarPersonaje',
-  setup() {
-    const characters = ref([]);
-    const selectedCharacter1 = ref(null);
-    const selectedCharacter2 = ref(null);
-
-    // Función para obtener los personajes desde el backend
-    const fetchCharacters = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/characters');
-        characters.value = response.data;
-      } catch (error) {
-        console.error("Error al obtener los personajes:", error);
-      }
-    };
-
-    // Función para seleccionar el personaje de un jugador
-    const selectCharacter = (player, character) => {
-      if (player === 1) {
-        selectedCharacter1.value = character;
-        document.getElementById('selected-character1').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
-      } else {
-        selectedCharacter2.value = character;
-        document.getElementById('selected-character2').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
-      }
-    };
-
-    // Función para mover al siguiente personaje en el carrusel
-    const nextCharacter = (carouselId) => {
-      const carousel = document.getElementById(carouselId);
-      if (carousel && carousel.firstElementChild) {
-        const firstCharacter = carousel.firstElementChild;
-        carousel.appendChild(firstCharacter);
-      }
-    };
-
-    // Función para mover al personaje anterior en el carrusel
-    const prevCharacter = (carouselId) => {
-      const carousel = document.getElementById(carouselId);
-      if (carousel && carousel.lastElementChild) {
-        const lastCharacter = carousel.lastElementChild;
-        carousel.insertBefore(lastCharacter, carousel.firstElementChild); 
-      }
-    };
-
-    // Ejecutar fetchCharacters cuando el componente se monte
-    onMounted(() => {
-      fetchCharacters();
-    });
-
-    // Retornar valores y funciones para usar en el template
-    return {
-      characters,
-      selectedCharacter1,
-      selectedCharacter2,
-      selectCharacter,
-      nextCharacter,
-      prevCharacter
-    };
-  },
-};
-</script>
-
 <template>
   <div>
     <h1>Seleccionar Personaje</h1>
@@ -110,26 +42,83 @@ export default {
   </div>
 </template>
 
+<script>
+import { ref, onMounted, onUnmounted } from 'vue';
+import axios from 'axios';
+
+export default {
+  name: 'SeleccionarPersonaje',
+  setup() {
+    const characters = ref([]);
+    const selectedCharacter1 = ref(null);
+    const selectedCharacter2 = ref(null);
+
+    // Función para obtener los personajes desde el backend
+    const fetchCharacters = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/characters');
+        characters.value = response.data;
+      } catch (error) {
+        console.error("Error al obtener los personajes:", error);
+      }
+    };
+
+    // Función para seleccionar el personaje de un jugador
+    const selectCharacter = (player, character) => {
+      if (player === 1) {
+        selectedCharacter1.value = character;
+        document.getElementById('selected-character1').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
+      } else {
+        selectedCharacter2.value = character;
+        document.getElementById('selected-character2').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
+      }
+    };
+
+    // Función para mover al siguiente personaje en el carrusel
+    const nextCharacter = (carouselId) => {
+      const carousel = document.getElementById(carouselId);
+      if (carousel && carousel.firstElementChild) {
+        const firstCharacter = carousel.firstElementChild;
+        carousel.appendChild(firstCharacter);
+      }
+    };
+
+    // Función para mover al personaje anterior en el carrusel
+    const prevCharacter = (carouselId) => {
+      const carousel = document.getElementById(carouselId);
+      if (carousel && carousel.lastElementChild) {
+        const lastCharacter = carousel.lastElementChild;
+        carousel.insertBefore(lastCharacter, carousel.firstElementChild);
+      }
+    };
+
+    // Ejecutar fetchCharacters cuando el componente se monte
+    onMounted(() => {
+      fetchCharacters();
+      document.body.classList.add('character-selection-background');
+    });
+
+    onUnmounted(() => {
+      document.body.classList.remove('character-selection-background');
+    });
+
+    // Retornar valores y funciones para usar en el template
+    return {
+      characters,
+      selectedCharacter1,
+      selectedCharacter2,
+      selectCharacter,
+      nextCharacter,
+      prevCharacter
+    };
+  },
+};
+</script>
+
 <style scoped>
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-image: url("../assets/Mapa.png");
-  background-size: cover;
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-h1 {
+h1, h2 {
   color: rgb(255, 255, 255);
-}
-
-h2 {
-  color: #ffffff;
+  text-align: center;
 }
 
 .character-selection {
@@ -137,6 +126,7 @@ h2 {
   justify-content: space-around;
   width: 100%;
   margin: 20px 0;
+  gap: 200px; /* Añadido para separar los carruseles */
 }
 
 .player-selection {
@@ -155,7 +145,7 @@ h2 {
   border: 2px solid rgba(255, 255, 255, 0.7);
   border-radius: 12px;
   background-color: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .character {
@@ -210,6 +200,7 @@ h2 {
 
 .buttons {
   margin-top: 20px;
+  text-align: center;
 }
 
 button {
@@ -222,5 +213,20 @@ button {
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+</style>
+
+<style>
+.character-selection-background {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-image: url("../assets/Mapa.png");
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>
