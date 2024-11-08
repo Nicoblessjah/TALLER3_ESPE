@@ -53,7 +53,6 @@ export default {
     const selectedCharacter1 = ref(null);
     const selectedCharacter2 = ref(null);
 
-    // Función para obtener los personajes desde el backend
     const fetchCharacters = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/characters');
@@ -63,18 +62,16 @@ export default {
       }
     };
 
-    // Función para seleccionar el personaje de un jugador
     const selectCharacter = (player, character) => {
       if (player === 1) {
         selectedCharacter1.value = character;
-        document.getElementById('selected-character1').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
+        document.getElementById('selected-character1').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`;
       } else {
         selectedCharacter2.value = character;
-        document.getElementById('selected-character2').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`; // Usar la URL completa
+        document.getElementById('selected-character2').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`;
       }
     };
 
-    // Función para mover al siguiente personaje en el carrusel
     const nextCharacter = (carouselId) => {
       const carousel = document.getElementById(carouselId);
       if (carousel && carousel.firstElementChild) {
@@ -83,7 +80,6 @@ export default {
       }
     };
 
-    // Función para mover al personaje anterior en el carrusel
     const prevCharacter = (carouselId) => {
       const carousel = document.getElementById(carouselId);
       if (carousel && carousel.lastElementChild) {
@@ -92,7 +88,6 @@ export default {
       }
     };
 
-    // Ejecutar fetchCharacters cuando el componente se monte
     onMounted(() => {
       fetchCharacters();
       document.body.classList.add('character-selection-background');
@@ -102,7 +97,6 @@ export default {
       document.body.classList.remove('character-selection-background');
     });
 
-    // Retornar valores y funciones para usar en el template
     return {
       characters,
       selectedCharacter1,
@@ -116,8 +110,11 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 h1, h2 {
-  color: rgb(255, 255, 255);
+  font-family: 'Press Start 2P', cursive;
+  color: white;
   text-align: center;
 }
 
@@ -126,7 +123,7 @@ h1, h2 {
   justify-content: space-around;
   width: 100%;
   margin: 20px 0;
-  gap: 200px; /* Añadido para separar los carruseles */
+  gap: 700px;
 }
 
 .player-selection {
@@ -218,8 +215,6 @@ button:disabled {
 
 <style>
 .character-selection-background {
-  font-family: Arial, sans-serif;
-  text-align: center;
   background-image: url("../assets/Mapa.png");
   background-size: cover;
   margin: 0;
