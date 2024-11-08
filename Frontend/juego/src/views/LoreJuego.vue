@@ -30,30 +30,48 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
 .lore-container {
   text-align: center;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Press Start 2P', cursive;
   padding: 20px;
-  background-color: #fff;
-  color: #333;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  background-image: url("../assets/portada2.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
 h1 {
   font-size: 2.5em;
   margin-bottom: 20px;
-  color: #333;
 }
 
 .lore-text {
-  font-size: 1.2em;
+  font-size: 1em;
   line-height: 1.6;
   margin-bottom: 40px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 15px;
 }
 
 h2 {
   font-size: 1.8em;
   margin-top: 20px;
-  color: #444;
+  color: #fff;
 }
 
 .menu-container {

@@ -48,9 +48,9 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
-  margin: 0; /* Elimina cualquier margen del body */
+  margin: 0;
   font-family: 'Press Start 2P', cursive;
-  background-color: transparent; /* Asegúrate de que no haya fondo por defecto */
+  background-color: transparent;
 }
 
 .register-container {
