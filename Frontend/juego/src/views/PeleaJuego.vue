@@ -1,42 +1,141 @@
-<script>
-export default {
-  name: 'PeleaJuego'
-}
-</script>
-
 <template>
-  <body>
-  <h1>Épicas Batallas de Rap del Frikismo</h1>
-  <audio id="background-music" autoplay loop>
-    <source src="assets/song.mp3" type="audio/mpeg">
-    Tu navegador no soporta la etiqueta de audio.
-  </audio>
-  <div class="container">
-    <div id="fight-section">
-      <div class="health-bar" id="hero-health-bar">
-        <div class="health" id="hero-health"></div>
-        <p class="status" id="hero-status">Vida: 1000/1000</p>
-      </div>
-      <div class="health-bar" id="enemy-health-bar">
-        <div class="health" id="enemy-health"></div>
-        <p class="status" id="enemy-status">Vida: 1000/1000</p>
-      </div>
-      <div class="character" id="hero">
-        <canvas id="hero-canvas" width="64" height="64"></canvas>
-      </div>
-      <div class="character" id="enemy">
-        <canvas id="enemy-canvas" width="64" height="64"></canvas>
+  <div>
+    <h1>Épicas Batallas de Rap del Frikismo</h1>
+    <audio id="background-music" autoplay loop>
+      <source src="assets/song.mp3" type="audio/mpeg">
+      Tu navegador no soporta la etiqueta de audio.
+    </audio>
+    <div class="container">
+      <div id="fight-section">
+        <div class="health-bar" id="hero-health-bar">
+          <div class="health" id="hero-health" :style="{ width: heroHealth + '%' }"></div>
+          <p class="status" id="hero-status">Vida: {{ heroHealth }}/100</p>
+        </div>
+        <div class="health-bar" id="enemy-health-bar">
+          <div class="health" id="enemy-health" :style="{ width: enemyHealth + '%' }"></div>
+          <p class="status" id="enemy-status">Vida: {{ enemyHealth }}/100</p>
+        </div>
+        <div class="character" id="hero" ref="hero">
+          <img :src="hero.image" alt="Hero">
+        </div>
+        <div class="character" id="enemy" ref="enemy">
+          <img :src="enemy.image" alt="Enemy">
+        </div>
       </div>
     </div>
+    <div class="buttons">
+      <button class="btn-personajes">
+        <router-link :to="{ path: '/menu' }">Salir</router-link>
+      </button>
+      <button class="btn-personajes">
+        <router-link :to="{ path: '/seleccionar' }">Cambiar Personaje</router-link>
+      </button>
+    </div>
   </div>
-  <div class="buttons">
-    <button class="btn-personajes"> <router-link :to="{ path: '/menu'}" >Salir</router-link> </button>
-    <button class="btn-personajes"> <router-link :to="{ path: '/seleccionar'}" >Cambiar Personaje</router-link> </button>
-  </div>
-
-  </body>
-
 </template>
+
+<script>
+import { ref, onMounted, onUnmounted } from 'vue';
+
+export default {
+  name: 'PeleaJuego',
+  setup() {
+    const hero = ref({
+      health: 100,
+      damage: 25,
+      image: '', // Ruta de la imagen del héroe seleccionado
+    });
+
+    const enemy = ref({
+      health: 100,
+      damage: 25,
+      image: '', // Ruta de la imagen del enemigo seleccionado
+    });
+
+    const heroHealth = ref(100);
+    const enemyHealth = ref(100);
+    const heroY = ref(0);
+    const heroVelocity = ref(0);
+    const keys = ref({});
+
+    const gravity = 0.5;
+
+    const loadCharacters = () => {
+      const selectedHero = JSON.parse(localStorage.getItem('selectedHero'));
+      const selectedEnemy = JSON.parse(localStorage.getItem('selectedEnemy'));
+
+      hero.value = { ...hero.value, ...selectedHero };
+      enemy.value = { ...enemy.value, ...selectedEnemy };
+    };
+
+    const handleKeyDown = (event) => {
+      keys.value[event.key] = true;
+    };
+
+    const handleKeyUp = (event) => {
+      keys.value[event.key] = false;
+    };
+
+    const updateGame = () => {
+      if (keys.value['ArrowRight']) {
+        moveHero(1);
+      }
+      if (keys.value['ArrowLeft']) {
+        moveHero(-1);
+      }
+      if (keys.value['ArrowUp']) {
+        jumpHero();
+      }
+
+      applyGravity();
+
+      requestAnimationFrame(updateGame);
+    };
+
+    const moveHero = (direction) => {
+      const heroElement = hero.value.$el;
+      const left = parseFloat(window.getComputedStyle(heroElement).left);
+      heroElement.style.left = left + direction * 5 + 'px';
+    };
+
+    const jumpHero = () => {
+      if (heroY.value === 0) {
+        heroVelocity.value = -10;
+      }
+    };
+
+    const applyGravity = () => {
+      const heroElement = hero.value.$el;
+      heroVelocity.value += gravity;
+      heroY.value += heroVelocity.value;
+      if (heroY.value > 0) {
+        heroY.value = 0;
+        heroVelocity.value = 0;
+      }
+      heroElement.style.bottom = heroY.value + 'px';
+    };
+
+    onMounted(() => {
+      loadCharacters();
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
+      updateGame();
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    });
+
+    return {
+      hero,
+      enemy,
+      heroHealth,
+      enemyHealth,
+    };
+  },
+};
+</script>
 
 <style scoped>
 body {
@@ -57,11 +156,6 @@ h1 {
   font-family: 'Courier New', Courier, monospace;
 }
 
-h2 {
-  color: #ffffff;
-  font-family: 'Times New Roman', Times, serif;
-}
-
 .container {
   display: flex;
   justify-content: center;
@@ -76,18 +170,17 @@ h2 {
   height: 80%;
   border: 1px solid #000;
   overflow: hidden;
-  background-color: rgba(255, 0, 242, 0.8)
+  background-color: rgba(255, 0, 242, 0.8);
 }
 
 .character {
   width: 10%;
   position: absolute;
-  height: auto;
+  bottom: 0;
 }
 
 .character img {
   width: 100%;
-  position: relative;
 }
 
 .health-bar {
@@ -105,7 +198,6 @@ h2 {
 .health {
   height: 100%;
   background-color: #4caf50;
-  width: 100%;
   border-radius: 15px;
 }
 
@@ -135,7 +227,6 @@ button {
   font-size: 16px;
   border-radius: 15px;
   cursor: pointer;
-
 }
 
 .btn-personajes {
@@ -144,11 +235,5 @@ button {
   padding: 10px 20px;
   border-radius: 15px;
   text-decoration: none;
-
-}
-
-.character canvas {
-  width: 128px;
-  height: 128px;
 }
 </style>
