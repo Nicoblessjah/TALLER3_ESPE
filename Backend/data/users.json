@@ -1,14 +1,7 @@
 [
   {
-    "username": "nuevoUsuario",
-    "password": "password123"
-  },
-  {
-    "username": "prueba",
-    "password": "prueba"
-  },
-  {
-    "username": "hola",
-    "password": "hola"
+    "username": "holo",
+    "password": "123",
+    "score": 0
   }
 ]

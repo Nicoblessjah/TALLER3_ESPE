@@ -2,41 +2,21 @@
   {
     "id": 1,
     "name": "Mordecai",
-    "health": 1000,
-    "damage": 25,
-    "elementId": "hero",
-    "healthBarId": "enemy-health",
-    "statusId": "enemy-status",
     "image": "../assets/mordecaiselect.png"
   },
   {
     "id": 2,
     "name": "Rigby",
-    "health": 1000,
-    "damage": 25,
-    "elementId": "enemy",
-    "healthBarId": "enemy-health",
-    "statusId": "enemy-status",
     "image": "../assets/rigbyselect.png"
   },
   {
     "id": 3,
     "name": "Jake",
-    "health": 1000,
-    "damage": 25,
-    "elementId": "hero",
-    "healthBarId": "enemy-health",
-    "statusId": "enemy-status",
     "image": "../assets/jakeselect.png"
   },
   {
     "id": 4,
     "name": "Finn",
-    "health": 1000,
-    "damage": 25,
-    "elementId": "enemy",
-    "healthBarId": "enemy-health",
-    "statusId": "enemy-status",
     "image": "../assets/finnselect.png"
   }
 ]

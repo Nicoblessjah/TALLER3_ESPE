@@ -11,7 +11,11 @@ const register = async (req, res) => {
         return res.status(400).json({ message: 'El usuario ya existe' });
     }
 
-    const newUser = { username, password };
+    const newUser = { 
+        username, 
+        password,
+        score: 0  };
+        
     users.push(newUser);
     await writeData(usersFilePath, users);
 
