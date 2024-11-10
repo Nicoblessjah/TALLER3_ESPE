@@ -5,38 +5,36 @@
       <div class="player-selection">
         <h2>Jugador 1</h2>
         <div class="carousel" id="carousel1">
-          <div v-for="character in characters" :key="character.id" class="character"
+          <div v-for="character in characters" :key="character" class="character"
                @click="selectCharacter(1, character)">
-            <p>{{ character.name }}</p>
-            <img :src="'http://localhost:3000/assets/' + character.image" alt="Character image"/>
+            <p>{{ character }}</p>
+            <img :src="'assets/' + character.toLowerCase() + '/' + character.toLowerCase() + '.png'" alt="Character image"/>
           </div>
         </div>
         <button class="prev" @click="prevCharacter('carousel1')">&#10094;</button>
         <button class="next" @click="nextCharacter('carousel1')">&#10095;</button>
-        <div id="selected-character1" class="selected-character"></div>
+        <img id="selected-character1" class="selected-character" :src="selectedCharacter1Image"/>
       </div>
 
       <div class="player-selection">
         <h2>Jugador 2</h2>
         <div class="carousel" id="carousel2">
-          <div v-for="character in characters" :key="character.id" class="character"
+          <div v-for="character in characters" :key="character" class="character"
                @click="selectCharacter(2, character)">
-            <p>{{ character.name }}</p>
-            <img :src="'http://localhost:3000/assets/' + character.image" alt="Character image"/>
+            <p>{{ character }}</p>
+            <img :src="'assets/' + character.toLowerCase() + '/' + character.toLowerCase() + '.png'" alt="Character image"/>
           </div>
         </div>
         <button class="prev" @click="prevCharacter('carousel2')">&#10094;</button>
         <button class="next" @click="nextCharacter('carousel2')">&#10095;</button>
-        <div id="selected-character2" class="selected-character"></div>
+        <img id="selected-character2" class="selected-character" :src="selectedCharacter2Image"/>
       </div>
     </div>
 
     <div class="buttons">
-      <router-link to="/pelea" class="menu-link" :class="{ 'disabled-link': !selectedCharacter1 || !selectedCharacter2 }">
-        <button class="btn" :disabled="!selectedCharacter1 || !selectedCharacter2">
-          Iniciar Juego
-        </button>
-      </router-link>
+      <button class="btn" :disabled="!canStartGame" @click="startGame">
+        Iniciar Juego
+      </button>
       <router-link to="/menu" class="menu-link">
         <button class="btn">Volver</button>
       </router-link>
@@ -45,69 +43,84 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
-import axios from 'axios';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 export default {
   name: 'SeleccionarPersonaje',
   setup() {
-    const characters = ref([]);
+    const characters = ref(['Catarina', 'Artorias', 'Finn', 'Jake', 'Mordecai', 'Rigby']); // Lista de nombres de personajes
     const selectedCharacter1 = ref(null);
     const selectedCharacter2 = ref(null);
-
-    const fetchCharacters = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/characters');
-        characters.value = response.data;
-      } catch (error) {
-        console.error("Error al obtener los personajes:", error);
-      }
-    };
+    const selectedCharacter1Image = ref('');
+    const selectedCharacter2Image = ref('');
 
     const selectCharacter = (player, character) => {
+      const characterImage = `./assets/${character.toLowerCase()}/${character.toLowerCase()}.png`;
+
       if (player === 1) {
-        selectedCharacter1.value = character;
-        document.getElementById('selected-character1').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`;
+        selectedCharacter1.value = character.toLowerCase();
+        selectedCharacter1Image.value = characterImage;
+        console.log(`Jugador 1 ha seleccionado: ${selectedCharacter1.value}`);
       } else {
-        selectedCharacter2.value = character;
-        document.getElementById('selected-character2').style.backgroundImage = `url(http://localhost:3000/assets/${character.image})`;
+        selectedCharacter2.value = character.toLowerCase();
+        selectedCharacter2Image.value = characterImage;
+        console.log(`Jugador 2 ha seleccionado: ${selectedCharacter2.value}`);
       }
     };
 
     const nextCharacter = (carouselId) => {
       const carousel = document.getElementById(carouselId);
-      if (carousel && carousel.firstElementChild) {
-        const firstCharacter = carousel.firstElementChild;
-        carousel.appendChild(firstCharacter);
-      }
+      carousel.appendChild(carousel.firstElementChild);
+      updateSelection(carouselId);
     };
 
     const prevCharacter = (carouselId) => {
       const carousel = document.getElementById(carouselId);
-      if (carousel && carousel.lastElementChild) {
-        const lastCharacter = carousel.lastElementChild;
-        carousel.insertBefore(lastCharacter, carousel.firstElementChild);
+      carousel.insertBefore(carousel.lastElementChild, carousel.firstElementChild);
+      updateSelection(carouselId);
+    };
+
+    const updateSelection = (carouselId) => {
+      const carousel = document.getElementById(carouselId);
+      const selectedCharacter = carousel.children[0].textContent.trim();
+      if (carouselId === 'carousel1') {
+        selectCharacter(1, selectedCharacter);
+      } else {
+        selectCharacter(2, selectedCharacter);
+      }
+    };
+
+    const canStartGame = computed(() => selectedCharacter1.value && selectedCharacter2.value);
+
+    const startGame = () => {
+      if (canStartGame.value) {
+        localStorage.setItem('player1Character', selectedCharacter1.value);
+        localStorage.setItem('player2Character', selectedCharacter2.value);
+        window.location.href = '/pelea';
       }
     };
 
     onMounted(() => {
-      fetchCharacters();
-      document.body.classList.add('character-selection-background');
+      document.body.classList.add('select-background');
     });
 
     onUnmounted(() => {
-      document.body.classList.remove('character-selection-background');
+      document.body.classList.remove('select-background');
     });
 
     return {
       characters,
       selectedCharacter1,
       selectedCharacter2,
+      selectedCharacter1Image,
+      selectedCharacter2Image,
       selectCharacter,
       nextCharacter,
-      prevCharacter
+      prevCharacter,
+      startGame,
+      canStartGame
     };
-  },
+  }
 };
 </script>
 

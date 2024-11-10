@@ -15,11 +15,11 @@
           <div class="health" id="enemy-health" :style="{ width: enemyHealth + '%' }"></div>
           <p class="status" id="enemy-status">Vida: {{ enemyHealth }}/100</p>
         </div>
-        <div class="character" id="hero" ref="hero">
-          <img :src="hero.image" alt="Hero">
+        <div class="character" id="hero" ref="heroElement">
+          <img :src="heroImage" alt="Hero">
         </div>
-        <div class="character" id="enemy" ref="enemy">
-          <img :src="enemy.image" alt="Enemy">
+        <div class="character" id="enemy" ref="enemyElement">
+          <img :src="enemyImage" alt="Enemy">
         </div>
       </div>
     </div>
@@ -40,40 +40,40 @@ import { ref, onMounted, onUnmounted, watch } from 'vue';
 export default {
   name: 'PeleaJuego',
   setup() {
-    const hero = ref({
-      health: 100,
-      damage: 25,
-      image: '', // Ruta de la imagen del héroe seleccionado
-    });
-
-    const enemy = ref({
-      health: 100,
-      damage: 25,
-      image: '', // Ruta de la imagen del enemigo seleccionado
-    });
-
     const heroHealth = ref(100);
     const enemyHealth = ref(100);
     const heroY = ref(0);
     const heroVelocity = ref(0);
     const keys = ref({});
     const heroElement = ref(null);
+    const enemyElement = ref(null);
     const gravity = 0.5;
+    const heroImage = ref('');
+    const enemyImage = ref('');
 
     const loadCharacters = () => {
-      const selectedHero = JSON.parse(localStorage.getItem('selectedHero'));
-      const selectedEnemy = JSON.parse(localStorage.getItem('selectedEnemy'));
+      const player1Character = localStorage.getItem('player1Character');
+      const player2Character = localStorage.getItem('player2Character');
 
-      hero.value = {...hero.value, ...selectedHero};
-      enemy.value = {...enemy.value, ...selectedEnemy};
+      console.log('Cargando personajes:', player1Character, player2Character);
+
+      if (player1Character && player2Character) {
+        heroImage.value = `../assets/${player1Character}/${player1Character}.png`;
+        enemyImage.value = `assets/${player2Character}/${player2Character}.png`;
+        console.log('Imágenes cargadas:', heroImage.value, enemyImage.value);
+      } else {
+        window.location.href = './select_character.html';
+      }
     };
 
     const handleKeyDown = (event) => {
       keys.value[event.key] = true;
+      console.log('Key down:', event.key, keys.value);
     };
 
     const handleKeyUp = (event) => {
       keys.value[event.key] = false;
+      console.log('Key up:', event.key, keys.value);
     };
 
     const updateGame = () => {
@@ -94,13 +94,15 @@ export default {
 
     const moveHero = (direction) => {
       if (!heroElement.value) return;
-      const left = parseFloat(window.getComputedStyle(heroElement.value).left);
-      heroElement.value.style.left = left + direction * 5 + 'px';
+      const currentLeft = parseFloat(window.getComputedStyle(heroElement.value).left) || 0;
+      heroElement.value.style.left = currentLeft + direction * 5 + 'px'; // Mueve el personaje horizontalmente
+      console.log('Hero moved to:', heroElement.value.style.left);
     };
 
     const jumpHero = () => {
       if (heroY.value === 0) {
         heroVelocity.value = -10;
+        console.log('Hero jumps');
       }
     };
 
@@ -108,15 +110,20 @@ export default {
       if (!heroElement.value) return;
       heroVelocity.value += gravity;
       heroY.value += heroVelocity.value;
+
+      // Limitar el valor de Y para que no se mueva más allá del suelo
       if (heroY.value > 0) {
         heroY.value = 0;
         heroVelocity.value = 0;
       }
-      heroElement.value.style.bottom = heroY.value + 'px';
+
+      heroElement.value.style.bottom = heroY.value + 'px'; // Asegúrate de que esté en píxeles
+      console.log('Gravity applied:', heroY.value, heroElement.value.style.bottom);
     };
 
     watch(heroElement, (newVal) => {
       if (newVal) {
+        console.log('Hero element set:', newVal);
         updateGame();
       }
     });
@@ -135,11 +142,12 @@ export default {
     });
 
     return {
-      hero,
-      enemy,
       heroHealth,
       enemyHealth,
       heroElement,
+      enemyElement,
+      heroImage,
+      enemyImage
     };
   },
 };
@@ -178,7 +186,16 @@ h1 {
 
 .character img {
   width: 100%;
+  display: block;
 }
+
+#hero, #enemy {
+  position: absolute;
+  bottom: 0;
+  left: 50px;  /* Asegúrate de que el héroe esté dentro de la pantalla */
+  transition: left 0.1s ease;
+}
+
 
 .health-bar {
   position: absolute;
