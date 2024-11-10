@@ -14,7 +14,8 @@ const register = async (req, res) => {
     const newUser = { 
         username, 
         password,
-        score: 0  };
+        winner: 0,
+        loser:0  };
         
     users.push(newUser);
     await writeData(usersFilePath, users);

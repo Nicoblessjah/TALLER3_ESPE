@@ -1,7 +1,8 @@
 [
   {
-    "username": "holo",
-    "password": "123",
-    "score": 0
+    "username": "hola",
+    "password": "hola",
+    "winner": 0,
+    "loser": 0
   }
 ]
