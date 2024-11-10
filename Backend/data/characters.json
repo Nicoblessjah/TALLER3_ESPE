@@ -2,21 +2,25 @@
   {
     "id": 1,
     "name": "Mordecai",
-    "image": "../assets/mordecaiselect.png"
+    "image": "../assets/mordecaiselect.png",
+    "description": "Uno de los amigos inseparables del parque esta listo para demostrar que la amistad puede ser el arma más fuerte en una batalla de rap. Mordecai con su estilo relajado puede cayar bocas a la hora de demostrar quien tiene mas flow que todos en el mundo, ¡Es hora de hacer temblar los escenarios!"
   },
   {
     "id": 2,
     "name": "Rigby",
-    "image": "../assets/rigbyselect.png"
+    "image": "../assets/rigbyselect.png",
+    "description": "Intenso Rigby el mapache compañero del majetuoso mordecai demuestra que no esta para tonterias y que junto a su compañero pueden hacer temblar al mismo Eminen a la hora de rapear. ¿Quien podra contra él? "
   },
   {
     "id": 3,
     "name": "Jake",
-    "image": "../assets/jakeselect.png"
+    "image": "../assets/jakeselect.png",
+    "description": "El perro mágico y compañero inseparable de Finn. Con su poder de estirarse y su amor por la diversión, Jake es un contendiente impredecible que usa sus habilidades sobrenaturales para dominar el rap como nunca antes. ¿Podrá su carisma y creatividad llevarlo a la victoria?"
   },
   {
     "id": 4,
     "name": "Finn",
-    "image": "../assets/finnselect.png"
+    "image": "../assets/finnselect.png",
+    "description": "El intrépido héroe de Ooo, con su espada en mano y su corazón lleno de valentía, Finn no solo lucha por salvar el mundo, ¡sino también por convertirse en el campeón del rap! Su determinación y su pasión lo hacen un oponente feroz en cualquier batalla."
   }
 ]
