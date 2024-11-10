@@ -2,7 +2,7 @@
   <div>
     <h1>Épicas Batallas de Rap del Frikismo</h1>
     <audio id="background-music" autoplay loop>
-      <source src="assets/song.mp3" type="audio/mpeg">
+      <source src="../assets/song.mp3" type="audio/mpeg">
       Tu navegador no soporta la etiqueta de audio.
     </audio>
     <div class="container">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 
 export default {
   name: 'PeleaJuego',
@@ -57,7 +57,7 @@ export default {
     const heroY = ref(0);
     const heroVelocity = ref(0);
     const keys = ref({});
-
+    const heroElement = ref(null);
     const gravity = 0.5;
 
     const loadCharacters = () => {
@@ -93,9 +93,9 @@ export default {
     };
 
     const moveHero = (direction) => {
-      const heroElement = hero.value.$el;
-      const left = parseFloat(window.getComputedStyle(heroElement).left);
-      heroElement.style.left = left + direction * 5 + 'px';
+      if (!heroElement.value) return;
+      const left = parseFloat(window.getComputedStyle(heroElement.value).left);
+      heroElement.value.style.left = left + direction * 5 + 'px';
     };
 
     const jumpHero = () => {
@@ -105,21 +105,26 @@ export default {
     };
 
     const applyGravity = () => {
-      const heroElement = hero.value.$el;
+      if (!heroElement.value) return;
       heroVelocity.value += gravity;
       heroY.value += heroVelocity.value;
       if (heroY.value > 0) {
         heroY.value = 0;
         heroVelocity.value = 0;
       }
-      heroElement.style.bottom = heroY.value + 'px';
+      heroElement.value.style.bottom = heroY.value + 'px';
     };
+
+    watch(heroElement, (newVal) => {
+      if (newVal) {
+        updateGame();
+      }
+    });
 
     onMounted(() => {
       loadCharacters();
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('keyup', handleKeyUp);
-      updateGame();
       document.body.classList.add('fight-background');
     });
 
@@ -134,6 +139,7 @@ export default {
       enemy,
       heroHealth,
       enemyHealth,
+      heroElement,
     };
   },
 };
