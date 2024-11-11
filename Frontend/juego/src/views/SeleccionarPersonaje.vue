@@ -11,7 +11,7 @@
             class="character"
             @click="selectCharacter(1, character)"
           >
-            <p>{{ character }}</p>
+            <p class="character-name">{{ character }}</p>
             <img :src="getCharacterImage(character)" alt="Character image" />
           </div>
         </div>
@@ -33,7 +33,7 @@
             class="character"
             @click="selectCharacter(2, character)"
           >
-            <p>{{ character }}</p>
+            <p class="character-name">{{ character }}</p>
             <img :src="getCharacterImage(character)" alt="Character image" />
           </div>
         </div>
@@ -174,7 +174,7 @@ h2 {
 }
 
 .character {
-  width: 200px;
+  width: 180px;
   height: 250px;
   margin: 10px;
   cursor: pointer;
@@ -183,12 +183,18 @@ h2 {
   transition: transform 0.2s;
 }
 
+.character-name {
+  color: #ccc;
+  position: relative;
+  text-align: center;
+}
+
 .character img {
   position: relative;
   max-width: 90%;
   margin: 100px;
   bottom: 90px;
-  right: 100px;
+  right: 90px;
   object-fit: contain;
 }
 
