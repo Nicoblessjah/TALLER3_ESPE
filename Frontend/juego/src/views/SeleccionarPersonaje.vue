@@ -5,29 +5,45 @@
       <div class="player-selection">
         <h2>Jugador 1</h2>
         <div class="carousel" id="carousel1">
-          <div v-for="character in characters" :key="character" class="character"
-               @click="selectCharacter(1, character)">
+          <div
+            v-for="character in characters"
+            :key="character"
+            class="character"
+            @click="selectCharacter(1, character)"
+          >
             <p>{{ character }}</p>
-            <img :src="'assets/' + character.toLowerCase() + '/' + character.toLowerCase() + '.png'" alt="Character image"/>
+            <img :src="getCharacterImage(character)" alt="Character image" />
           </div>
         </div>
         <button class="prev" @click="prevCharacter('carousel1')">&#10094;</button>
         <button class="next" @click="nextCharacter('carousel1')">&#10095;</button>
-        <img id="selected-character1" class="selected-character" :src="selectedCharacter1Image"/>
+        <img
+          id="selected-character1"
+          class="selected-character"
+          :src="selectedCharacter1Image"
+        />
       </div>
 
       <div class="player-selection">
         <h2>Jugador 2</h2>
         <div class="carousel" id="carousel2">
-          <div v-for="character in characters" :key="character" class="character"
-               @click="selectCharacter(2, character)">
+          <div
+            v-for="character in characters"
+            :key="character"
+            class="character"
+            @click="selectCharacter(2, character)"
+          >
             <p>{{ character }}</p>
-            <img :src="'assets/' + character.toLowerCase() + '/' + character.toLowerCase() + '.png'" alt="Character image"/>
+            <img :src="getCharacterImage(character)" alt="Character image" />
           </div>
         </div>
         <button class="prev" @click="prevCharacter('carousel2')">&#10094;</button>
         <button class="next" @click="nextCharacter('carousel2')">&#10095;</button>
-        <img id="selected-character2" class="selected-character" :src="selectedCharacter2Image"/>
+        <img
+          id="selected-character2"
+          class="selected-character"
+          :src="selectedCharacter2Image"
+        />
       </div>
     </div>
 
@@ -43,20 +59,21 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-
+import { ref, computed, onMounted, onUnmounted } from "vue";
 export default {
-  name: 'SeleccionarPersonaje',
+  name: "SelectCharacter",
   setup() {
-    const characters = ref(['Catarina', 'Artorias', 'Finn', 'Jake', 'Mordecai', 'Rigby']); // Lista de nombres de personajes
+    const characters = ref(["finn", "jake", "mordecai", "rigby"]);
     const selectedCharacter1 = ref(null);
     const selectedCharacter2 = ref(null);
-    const selectedCharacter1Image = ref('');
-    const selectedCharacter2Image = ref('');
+    const selectedCharacter1Image = ref("");
+    const selectedCharacter2Image = ref("");
+    const getCharacterImage = (character) => {
+      return require(`../assets/${character.toLowerCase()}/${character.toLowerCase()}select.png`);
+    };
 
     const selectCharacter = (player, character) => {
-      const characterImage = `./assets/${character.toLowerCase()}/${character.toLowerCase()}.png`;
-
+      const characterImage = getCharacterImage(character);
       if (player === 1) {
         selectedCharacter1.value = character.toLowerCase();
         selectedCharacter1Image.value = characterImage;
@@ -67,68 +84,64 @@ export default {
         console.log(`Jugador 2 ha seleccionado: ${selectedCharacter2.value}`);
       }
     };
-
     const nextCharacter = (carouselId) => {
       const carousel = document.getElementById(carouselId);
       carousel.appendChild(carousel.firstElementChild);
       updateSelection(carouselId);
     };
-
     const prevCharacter = (carouselId) => {
       const carousel = document.getElementById(carouselId);
       carousel.insertBefore(carousel.lastElementChild, carousel.firstElementChild);
       updateSelection(carouselId);
     };
-
     const updateSelection = (carouselId) => {
       const carousel = document.getElementById(carouselId);
       const selectedCharacter = carousel.children[0].textContent.trim();
-      if (carouselId === 'carousel1') {
+      if (carouselId === "carousel1") {
         selectCharacter(1, selectedCharacter);
       } else {
         selectCharacter(2, selectedCharacter);
       }
     };
-
-    const canStartGame = computed(() => selectedCharacter1.value && selectedCharacter2.value);
-
+    const canStartGame = computed(
+      () => selectedCharacter1.value && selectedCharacter2.value
+    );
     const startGame = () => {
       if (canStartGame.value) {
-        localStorage.setItem('player1Character', selectedCharacter1.value);
-        localStorage.setItem('player2Character', selectedCharacter2.value);
-        window.location.href = '/pelea';
+        localStorage.setItem("player1Character", selectedCharacter1.value);
+        localStorage.setItem("player2Character", selectedCharacter2.value);
+        window.location.href = "/pelea";
       }
     };
-
     onMounted(() => {
-      document.body.classList.add('select-background');
+      document.body.classList.add("character-selection-background");
     });
-
     onUnmounted(() => {
-      document.body.classList.remove('select-background');
+      document.body.classList.remove("character-selection-background");
     });
-
     return {
       characters,
       selectedCharacter1,
       selectedCharacter2,
       selectedCharacter1Image,
       selectedCharacter2Image,
+      getCharacterImage,
       selectCharacter,
       nextCharacter,
       prevCharacter,
       startGame,
-      canStartGame
+      canStartGame,
     };
-  }
+  },
 };
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
-h1, h2 {
-  font-family: 'Press Start 2P', cursive;
+h1,
+h2 {
+  font-family: "Press Start 2P", cursive;
   color: white;
   text-align: center;
 }
@@ -179,7 +192,8 @@ h1, h2 {
   object-fit: contain;
 }
 
-.prev, .next {
+.prev,
+.next {
   cursor: pointer;
   position: absolute;
   top: 50%;
