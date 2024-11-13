@@ -27,6 +27,9 @@
         <router-link :to="{ path: '/seleccionar' }">Cambiar Personaje</router-link>
       </button>
     </div>
+    <div v-if="gameOver" class="game-over">
+      <h2>Jugador {{ winner }} ha ganado!</h2>
+    </div>
   </div>
 </template>
 
@@ -42,6 +45,16 @@ export default {
     const enemyImage = ref(null);
     const heroCanvas = ref(null);
     const enemyCanvas = ref(null);
+    const heroX = ref(50);
+    const heroY = ref(100);
+    const enemyX = ref(300);
+    const enemyY = ref(100);
+    const heroJumping = ref(false);
+    const enemyJumping = ref(false);
+    const heroDirection = ref("right");
+    const enemyDirection = ref("left");
+    const gameOver = ref(false);
+    const winner = ref(null);
 
     const loadCharacters = () => {
       const player1Character = localStorage.getItem("player1Character");
@@ -51,13 +64,11 @@ export default {
         try {
           heroImage.value = new Image();
           heroImage.value.src = require(`../assets/${player1Character}/${player1Character}.png`);
-
           enemyImage.value = new Image();
           enemyImage.value.src = require(`../assets/${player2Character}/${player2Character}.png`);
 
-          heroImage.value.onload = () => drawCharacter(heroCanvas.value, heroImage.value);
-          enemyImage.value.onload = () =>
-            drawCharacter(enemyCanvas.value, enemyImage.value);
+          heroImage.value.onload = () => drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
+          enemyImage.value.onload = () => drawCharacter(enemyCanvas.value, enemyImage.value, enemyX.value, enemyY.value);
         } catch (error) {
           console.error("Error al cargar la imagen:", error);
         }
@@ -66,10 +77,81 @@ export default {
       }
     };
 
-    const drawCharacter = (canvas, image) => {
+    const drawCharacter = (canvas, image, x, y) => {
       const context = canvas.getContext("2d");
       context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      context.drawImage(image, x, y, 150, 150);
+    };
+
+    const handleKeydown = (event) => {
+      if (gameOver.value) return;
+
+      // Movimiento y acciones del jugador 1
+      if (event.key === "a") {
+        heroX.value -= 5;
+        heroDirection.value = "left";
+      } else if (event.key === "d") {
+        heroX.value += 5;
+        heroDirection.value = "right";
+      } else if (event.key === "w" && !heroJumping.value) {
+        heroY.value -= 50;
+        heroJumping.value = true;
+      } else if (event.key === "s") {
+        heroY.value += 5;
+      } else if (event.key === "b") {
+        attack(heroX.value, heroY.value, "hero");
+      }
+
+      // Movimiento y acciones del jugador 2
+      if (event.key === "ArrowLeft") {
+        enemyX.value -= 5;
+        enemyDirection.value = "left";
+      } else if (event.key === "ArrowRight") {
+        enemyX.value += 5;
+        enemyDirection.value = "right";
+      } else if (event.key === "ArrowUp" && !enemyJumping.value) {
+        enemyY.value -= 50;
+        enemyJumping.value = true;
+      } else if (event.key === "ArrowDown") {
+        enemyY.value += 5;
+      } else if (event.key === "Enter") {
+        attack(enemyX.value, enemyY.value, "enemy");
+      }
+    };
+
+    const attack = (x, y, player) => {
+      if (player === "hero" && x + 150 > enemyX.value && x < enemyX.value + 150 && y < enemyY.value + 150) {
+        enemyHealth.value -= 10;
+        if (enemyHealth.value <= 0) {
+          winner.value = 1;
+          gameOver.value = true;
+        }
+      } else if (player === "enemy" && x + 150 > heroX.value && x < heroX.value + 150 && y < heroY.value + 150) {
+        heroHealth.value -= 10;
+        if (heroHealth.value <= 0) {
+          winner.value = 2;
+          gameOver.value = true;
+        }
+      }
+    };
+
+    const updateGame = () => {
+      if (heroY.value < 100) {
+        heroY.value += 5;
+        heroJumping.value = true;
+      } else {
+        heroJumping.value = false;
+      }
+
+      if (enemyY.value < 100) {
+        enemyY.value += 5;
+        enemyJumping.value = true;
+      } else {
+        enemyJumping.value = false;
+      }
+
+      drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
+      drawCharacter(enemyCanvas.value, enemyImage.value, enemyX.value, enemyY.value);
     };
 
     onMounted(() => {
@@ -81,9 +163,13 @@ export default {
       enemyCanvas.value.height = 150;
 
       document.body.classList.add("fight-background");
+      window.addEventListener("keydown", handleKeydown);
+
+      setInterval(updateGame, 1000 / 60); // 60 FPS
     });
 
     onUnmounted(() => {
+      window.removeEventListener("keydown", handleKeydown);
       document.body.classList.remove("fight-background");
     });
 
@@ -92,6 +178,8 @@ export default {
       enemyHealth,
       heroCanvas,
       enemyCanvas,
+      gameOver,
+      winner,
     };
   },
 };
@@ -182,6 +270,13 @@ button {
   padding: 10px 20px;
   border-radius: 15px;
   text-decoration: none;
+}
+
+.game-over {
+  text-align: center;
+  color: #ffffff;
+  font-size: 24px;
+  margin-top: 20px;
 }
 </style>
 
