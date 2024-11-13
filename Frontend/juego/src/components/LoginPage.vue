@@ -30,6 +30,7 @@ export default {
         });
 
         alert(response.data.message);
+        localStorage.setItem('token', response.data.token); // Almacenar el token en localStorage
         this.$router.push('/menu');
       } catch (error) {
         alert(error.response.data.message);

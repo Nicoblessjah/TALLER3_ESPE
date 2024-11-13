@@ -5,12 +5,18 @@
       <router-link to="/seleccionar" class="menu-link">Seleccionar Personaje</router-link>
       <router-link to="/lore" class="menu-link">Ver Lore</router-link>
     </div>
+    <NavBar />
   </div>
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue';
+
 export default {
   name: 'MenuJuego',
+  components: {
+    NavBar
+  },
   mounted() {
     document.body.classList.add('menu-background');
   },
@@ -48,6 +54,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px; /* Añadir un margen inferior para espaciar el botón */
 }
 
 .menu-link {
