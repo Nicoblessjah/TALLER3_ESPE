@@ -7,6 +7,9 @@
     </audio>
     <div class="container">
       <div id="fight-section">
+        <div v-if="gameOver" class="game-over">
+          <h2 style="height: 0px;" > Jugador {{ winner }} ha ganado!</h2>
+        </div>
         <canvas id="hero-canvas" ref="heroCanvas"></canvas>
         <canvas id="enemy-canvas" ref="enemyCanvas"></canvas>
       </div>
@@ -26,9 +29,6 @@
       <button class="btn-personajes">
         <router-link :to="{ path: '/seleccionar' }">Cambiar Personaje</router-link>
       </button>
-    </div>
-    <div v-if="gameOver" class="game-over">
-      <h2>Jugador {{ winner }} ha ganado!</h2>
     </div>
   </div>
 </template>
