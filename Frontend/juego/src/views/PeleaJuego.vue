@@ -8,7 +8,7 @@
     <div class="container">
       <div id="fight-section">
         <div v-if="gameOver" class="game-over">
-          <h2 style="height: 0px;" > Jugador {{ winner }} ha ganado!</h2>
+          <h2 style="height: 0px;">Jugador {{ winner }} ha ganado!</h2>
         </div>
         <canvas id="hero-canvas" ref="heroCanvas"></canvas>
         <canvas id="enemy-canvas" ref="enemyCanvas"></canvas>
@@ -68,14 +68,14 @@ export default {
           enemyImage.value.src = require(`../assets/${player2Character}/${player2Character}.png`);
 
           heroImage.value.onload = () =>
-            drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
+              drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
           enemyImage.value.onload = () =>
-            drawCharacter(
-              enemyCanvas.value,
-              enemyImage.value,
-              enemyX.value,
-              enemyY.value
-            );
+              drawCharacter(
+                  enemyCanvas.value,
+                  enemyImage.value,
+                  enemyX.value,
+                  enemyY.value
+              );
         } catch (error) {
           console.error("Error al cargar la imagen:", error);
         }
@@ -90,15 +90,15 @@ export default {
       const spriteWidth = 25;
       const spriteHeight = 30;
       context.drawImage(
-        image,
-        0,
-        0,
-        spriteWidth,
-        spriteHeight,
-        x,
-        y,
-        spriteWidth,
-        spriteHeight
+          image,
+          0,
+          0,
+          spriteWidth,
+          spriteHeight,
+          x,
+          y,
+          spriteWidth,
+          spriteHeight
       );
     };
 
@@ -108,14 +108,16 @@ export default {
 
     const handleKeyup = (event) => {
       keys[event.key] = false;
+      if (event.key === "w") heroJumping.value = false;
+      if (event.key === "ArrowUp") enemyJumping.value = false;
     };
 
     const attack = (x, y, player) => {
       if (
-        player === "hero" &&
-        x + 150 > enemyX.value &&
-        x < enemyX.value + 150 &&
-        y < enemyY.value + 150
+          player === "hero" &&
+          x + 150 > enemyX.value &&
+          x < enemyX.value + 150 &&
+          y < enemyY.value + 150
       ) {
         enemyHealth.value -= 10;
         if (enemyHealth.value <= 0) {
@@ -123,10 +125,10 @@ export default {
           gameOver.value = true;
         }
       } else if (
-        player === "enemy" &&
-        x + 150 > heroX.value &&
-        x < heroX.value + 150 &&
-        y < heroY.value + 150
+          player === "enemy" &&
+          x + 150 > heroX.value &&
+          x < heroX.value + 150 &&
+          y < heroY.value + 150
       ) {
         heroHealth.value -= 10;
         if (heroHealth.value <= 0) {
@@ -139,14 +141,20 @@ export default {
     const updateGame = () => {
       if (gameOver.value) return;
 
-      if (keys["a"]) heroX.value -= 5;
-      if (keys["d"]) heroX.value += 5;
-      if (keys["w"] && !heroJumping.value) heroY.value -= 50;
+      if (keys["a"]) heroX.value -= 2;
+      if (keys["d"]) heroX.value += 2;
+      if (keys["w"] && !heroJumping.value) {
+        heroJumping.value = true;
+        heroY.value -= 9;
+      }
       if (keys[" "] || keys["Space"]) attack(heroX.value, heroY.value, "hero");
 
-      if (keys["ArrowLeft"]) enemyX.value -= 5;
-      if (keys["ArrowRight"]) enemyX.value += 5;
-      if (keys["ArrowUp"] && !enemyJumping.value) enemyY.value -= 50;
+      if (keys["ArrowLeft"]) enemyX.value -= 2;
+      if (keys["ArrowRight"]) enemyX.value += 2;
+      if (keys["ArrowUp"] && !enemyJumping.value) {
+        enemyJumping.value = true;
+        enemyY.value -= 9;
+      }
       if (keys["Enter"]) attack(enemyX.value, enemyY.value, "enemy");
 
       if (heroY.value < 100) heroY.value += 5;
