@@ -45,16 +45,16 @@ export default {
     const enemyImage = ref(null);
     const heroCanvas = ref(null);
     const enemyCanvas = ref(null);
-    const heroX = ref(50);
+    const heroX = ref(100);
     const heroY = ref(100);
     const enemyX = ref(300);
     const enemyY = ref(100);
     const heroJumping = ref(false);
     const enemyJumping = ref(false);
-    const heroDirection = ref("right");
-    const enemyDirection = ref("left");
     const gameOver = ref(false);
     const winner = ref(null);
+
+    const keys = {};
 
     const loadCharacters = () => {
       const player1Character = localStorage.getItem("player1Character");
@@ -67,8 +67,15 @@ export default {
           enemyImage.value = new Image();
           enemyImage.value.src = require(`../assets/${player2Character}/${player2Character}.png`);
 
-          heroImage.value.onload = () => drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
-          enemyImage.value.onload = () => drawCharacter(enemyCanvas.value, enemyImage.value, enemyX.value, enemyY.value);
+          heroImage.value.onload = () =>
+            drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
+          enemyImage.value.onload = () =>
+            drawCharacter(
+              enemyCanvas.value,
+              enemyImage.value,
+              enemyX.value,
+              enemyY.value
+            );
         } catch (error) {
           console.error("Error al cargar la imagen:", error);
         }
@@ -80,53 +87,47 @@ export default {
     const drawCharacter = (canvas, image, x, y) => {
       const context = canvas.getContext("2d");
       context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(image, x, y, 150, 150);
+      const spriteWidth = 25;
+      const spriteHeight = 30;
+      context.drawImage(
+        image,
+        0,
+        0,
+        spriteWidth,
+        spriteHeight,
+        x,
+        y,
+        spriteWidth,
+        spriteHeight
+      );
     };
 
     const handleKeydown = (event) => {
-      if (gameOver.value) return;
+      keys[event.key] = true;
+    };
 
-      // Movimiento y acciones del jugador 1
-      if (event.key === "a") {
-        heroX.value -= 5;
-        heroDirection.value = "left";
-      } else if (event.key === "d") {
-        heroX.value += 5;
-        heroDirection.value = "right";
-      } else if (event.key === "w" && !heroJumping.value) {
-        heroY.value -= 50;
-        heroJumping.value = true;
-      } else if (event.key === "s") {
-        heroY.value += 5;
-      } else if (event.key === "b") {
-        attack(heroX.value, heroY.value, "hero");
-      }
-
-      // Movimiento y acciones del jugador 2
-      if (event.key === "ArrowLeft") {
-        enemyX.value -= 5;
-        enemyDirection.value = "left";
-      } else if (event.key === "ArrowRight") {
-        enemyX.value += 5;
-        enemyDirection.value = "right";
-      } else if (event.key === "ArrowUp" && !enemyJumping.value) {
-        enemyY.value -= 50;
-        enemyJumping.value = true;
-      } else if (event.key === "ArrowDown") {
-        enemyY.value += 5;
-      } else if (event.key === "Enter") {
-        attack(enemyX.value, enemyY.value, "enemy");
-      }
+    const handleKeyup = (event) => {
+      keys[event.key] = false;
     };
 
     const attack = (x, y, player) => {
-      if (player === "hero" && x + 150 > enemyX.value && x < enemyX.value + 150 && y < enemyY.value + 150) {
+      if (
+        player === "hero" &&
+        x + 150 > enemyX.value &&
+        x < enemyX.value + 150 &&
+        y < enemyY.value + 150
+      ) {
         enemyHealth.value -= 10;
         if (enemyHealth.value <= 0) {
           winner.value = 1;
           gameOver.value = true;
         }
-      } else if (player === "enemy" && x + 150 > heroX.value && x < heroX.value + 150 && y < heroY.value + 150) {
+      } else if (
+        player === "enemy" &&
+        x + 150 > heroX.value &&
+        x < heroX.value + 150 &&
+        y < heroY.value + 150
+      ) {
         heroHealth.value -= 10;
         if (heroHealth.value <= 0) {
           winner.value = 2;
@@ -136,19 +137,20 @@ export default {
     };
 
     const updateGame = () => {
-      if (heroY.value < 100) {
-        heroY.value += 5;
-        heroJumping.value = true;
-      } else {
-        heroJumping.value = false;
-      }
+      if (gameOver.value) return;
 
-      if (enemyY.value < 100) {
-        enemyY.value += 5;
-        enemyJumping.value = true;
-      } else {
-        enemyJumping.value = false;
-      }
+      if (keys["a"]) heroX.value -= 5;
+      if (keys["d"]) heroX.value += 5;
+      if (keys["w"] && !heroJumping.value) heroY.value -= 50;
+      if (keys[" "] || keys["Space"]) attack(heroX.value, heroY.value, "hero");
+
+      if (keys["ArrowLeft"]) enemyX.value -= 5;
+      if (keys["ArrowRight"]) enemyX.value += 5;
+      if (keys["ArrowUp"] && !enemyJumping.value) enemyY.value -= 50;
+      if (keys["Enter"]) attack(enemyX.value, enemyY.value, "enemy");
+
+      if (heroY.value < 100) heroY.value += 5;
+      if (enemyY.value < 100) enemyY.value += 5;
 
       drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
       drawCharacter(enemyCanvas.value, enemyImage.value, enemyX.value, enemyY.value);
@@ -162,14 +164,20 @@ export default {
       enemyCanvas.value.width = 150;
       enemyCanvas.value.height = 150;
 
-      document.body.classList.add("fight-background");
-      window.addEventListener("keydown", handleKeydown);
+      heroX.value = 10;
+      enemyX.value = 110;
 
-      setInterval(updateGame, 1000 / 60); // 60 FPS
+      document.body.classList.add("fight-background");
+
+      window.addEventListener("keydown", handleKeydown);
+      window.addEventListener("keyup", handleKeyup);
+
+      setInterval(updateGame, 1000 / 60);
     });
 
     onUnmounted(() => {
       window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("keyup", handleKeyup);
       document.body.classList.remove("fight-background");
     });
 
@@ -204,18 +212,16 @@ h1 {
 
 #fight-section {
   position: relative;
-  width: 80%;
-  height: 300px;
-  border: 1px solid #000;
+  width: 100%;
+  height: 500px;
   overflow: hidden;
   background-color: rgba(255, 0, 242, 0.8);
-  display: flex;
-  justify-content: space-between;
 }
 
 canvas {
-  width: 150px;
-  height: 150px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .health-bar {
