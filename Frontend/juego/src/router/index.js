@@ -15,7 +15,7 @@ const routes = [
     { path: '/register', name: 'Register', component: Register },
     { path: '/', redirect: '/login' },
     { path: '/lore', name: 'LoreJuego', component: Lore},
-    { path: '/registro', name: 'RegistroPartidas', component: RegistroPartidas, meta: { requiresAuth: true } },
+    { path: '/registro', name: 'RegistroPartidas', component: RegistroPartidas },
 ];
 
 const router = createRouter({

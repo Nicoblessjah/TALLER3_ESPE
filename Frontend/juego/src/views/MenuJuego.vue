@@ -3,7 +3,6 @@
     <h1>Épicas Batallas de Rap del Frikismo</h1>
     <div class="menu-links">
       <router-link to="/seleccionar" class="menu-link">Seleccionar Personaje</router-link>
-      <router-link to="/registro" class="menu-link">Registro de Partidas</router-link> <!-- Nuevo botón -->
     </div>
     <NavBar />
   </div>

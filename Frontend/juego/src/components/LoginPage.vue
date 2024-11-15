@@ -20,7 +20,7 @@
     </form>
     <router-link to="/register" class="pixel-link">Register</router-link>
     <router-link to="/lore" class="menu-link">Ver Lore</router-link>
-
+    <router-link to="/registro" class="menu-link">Registro de Partidas</router-link>
   </div>
 </template>
 
