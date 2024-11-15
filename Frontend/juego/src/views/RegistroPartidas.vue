@@ -1,29 +1,41 @@
 <template>
-  <div class="menu-container">
-    <h1>Épicas Batallas de Rap del Frikismo</h1>
-    <div class="menu-links">
-      <router-link to="/seleccionar" class="menu-link">Seleccionar Personaje</router-link>
-      <router-link to="/lore" class="menu-link">Ver Lore</router-link>
-      <router-link to="/registro" class="menu-link">Registro de Partidas</router-link> <!-- Nuevo botón -->
+  <div class="menu-background">
+    <div class="menu-container">
+      <h1>Registro de Partidas</h1>
+      <div class="users-list">
+        <div class="user-card" v-for="user in users" :key="user.username">
+          <h2>{{ user.username }}</h2>
+          <p>Victorias: {{ user.winner }}</p>
+          <p>Derrotas: {{ user.loser }}</p>
+        </div>
+      </div>
     </div>
-    <NavBar />
   </div>
 </template>
 
 <script>
-import NavBar from "@/components/NavBar.vue";
+import axios from 'axios';
 
 export default {
-  name: "MenuJuego",
-  components: {
-    NavBar,
+  name: 'RegistroPartidas',
+  data() {
+    return {
+      users: []
+    };
   },
-  mounted() {
-    document.body.classList.add("menu-background");
+  created() {
+    this.fetchUsers();
   },
-  beforeUnmount() {
-    document.body.classList.remove("menu-background");
-  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const response = await axios.get('http://localhost:3000/api/auth/users');
+        this.users = response.data;
+      } catch (error) {
+        console.error('Error al obtener los usuarios:', error);
+      }
+    }
+  }
 };
 </script>
 
@@ -51,35 +63,34 @@ h1 {
   background-repeat: no-repeat;
 }
 
-.menu-links {
+.users-list {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.menu-link {
+.user-card {
   background: #000;
   color: #fff;
   border: 2px solid #fff;
-  padding: 15px 30px;
+  padding: 20px;
   margin: 10px;
   font-family: "Press Start 2P", cursive;
   font-size: 16px;
-  text-decoration: none;
-  display: block;
   text-align: center;
   border-radius: 5px;
   transition: background 0.3s, border-color 0.3s;
+  width: 200px;
 }
 
-.menu-link:hover {
-  background: #ffcc00;
-  border-color: #ffcc00;
+.user-card h2 {
+  margin-bottom: 10px;
 }
-</style>
 
-<style>
+.user-card p {
+  margin: 5px 0;
+}
+
 .menu-background {
   background-image: url("../assets/portada2.jpg");
   background-size: cover;

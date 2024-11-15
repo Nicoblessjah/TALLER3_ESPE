@@ -5,6 +5,7 @@ import SeleccionarPersonaje from "@/views/SeleccionarPersonaje.vue";
 import Login from '../components/LoginPage.vue';
 import Register from '../components/RegisterPage.vue';
 import Lore from '../views/LoreJuego.vue';
+import RegistroPartidas from '@/views/RegistroPartidas.vue';
 
 const routes = [
     { path: '/menu', name: 'Menu', component: MenuJuego, meta: { requiresAuth: true } },
@@ -14,6 +15,7 @@ const routes = [
     { path: '/register', name: 'Register', component: Register },
     { path: '/', redirect: '/login' },
     { path: '/lore', name: 'LoreJuego', component: Lore, meta: { requiresAuth: true } },
+    { path: '/registro', name: 'RegistroPartidas', component: RegistroPartidas, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
