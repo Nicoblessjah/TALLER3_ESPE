@@ -113,27 +113,42 @@ export default {
       if (event.key === "ArrowUp") enemyJumping.value = false;
     };
 
+    const getRandomDamage = () => {
+      return Math.floor(Math.random() * (5 - 1 + 1)) + 1;  // Rango de 1 a 5
+    };
+
     const attack = (x, y, player) => {
+      const heroWidth = 25;
+      const enemyWidth = 25;
+      const heroHeight = 30;
+      const enemyHeight = 30;
+
       if (
           player === "hero" &&
-          x + 150 > enemyX.value &&
-          x < enemyX.value + 150 &&
-          y < enemyY.value + 150
+          x + heroWidth > enemyX.value &&
+          x < enemyX.value + enemyWidth &&
+          y + heroHeight > enemyY.value &&
+          y < enemyY.value + enemyHeight
       ) {
-        enemyHealth.value -= 10;
+        const damage = getRandomDamage();
+        enemyHealth.value -= damage;
         punchSound.play();
+        console.log(`¡Daño al enemigo! -${damage}`);
         if (enemyHealth.value <= 0) {
           winner.value = 1;
           gameOver.value = true;
         }
       } else if (
           player === "enemy" &&
-          x + 150 > heroX.value &&
-          x < heroX.value + 150 &&
-          y < heroY.value + 150
+          x + heroWidth > heroX.value &&
+          x < heroX.value + heroWidth &&
+          y + heroHeight > heroY.value &&
+          y < heroY.value + heroHeight
       ) {
-        heroHealth.value -= 10;
+        const damage = getRandomDamage();  
+        heroHealth.value -= damage;
         punchSound.play();
+        console.log(`¡Daño al héroe! -${damage}`);
         if (heroHealth.value <= 0) {
           winner.value = 2;
           gameOver.value = true;
@@ -148,7 +163,7 @@ export default {
       if (keys["d"]) heroX.value += 2;
       if (keys["w"] && !heroJumping.value) {
         heroJumping.value = true;
-        heroY.value -= 9;
+        heroY.value -= 30;
       }
       if (keys[" "] || keys["Space"]) attack(heroX.value, heroY.value, "hero");
 
@@ -156,7 +171,7 @@ export default {
       if (keys["ArrowRight"]) enemyX.value += 2;
       if (keys["ArrowUp"] && !enemyJumping.value) {
         enemyJumping.value = true;
-        enemyY.value -= 9;
+        enemyY.value -= 30;
       }
       if (keys["Enter"]) attack(enemyX.value, enemyY.value, "enemy");
 
