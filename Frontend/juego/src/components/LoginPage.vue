@@ -19,6 +19,8 @@
       <button type="submit" class="pixel-button">Login</button>
     </form>
     <router-link to="/register" class="pixel-link">Register</router-link>
+    <router-link to="/lore" class="menu-link">Ver Lore</router-link>
+
   </div>
 </template>
 
@@ -112,6 +114,7 @@ h2 {
   font-family: "Press Start 2P", cursive;
   font-size: 16px;
   transition: background 0.3s;
+  margin: 2px;
 }
 
 .pixel-button:hover {
@@ -128,6 +131,35 @@ h2 {
 
 .pixel-link:hover {
   text-decoration: underline;
+}
+
+.menu-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.menu-link {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 15px 30px;
+  margin: 10px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  position: relative;
+  top: 100px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.menu-link:hover {
+  background: #ffcc00;
+  border-color: #ffcc00;
 }
 </style>
 

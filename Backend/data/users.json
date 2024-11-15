@@ -9,6 +9,12 @@
     "username": "nicolas",
     "password": "1234",
     "winner": 13,
-    "loser": 20
+    "loser": 21
+  },
+  {
+    "username": "pepe",
+    "password": "pepe",
+    "winner": 0,
+    "loser": 0
   }
 ]

@@ -14,7 +14,7 @@ const routes = [
     { path: '/login', name: 'Login', component: Login },
     { path: '/register', name: 'Register', component: Register },
     { path: '/', redirect: '/login' },
-    { path: '/lore', name: 'LoreJuego', component: Lore, meta: { requiresAuth: true } },
+    { path: '/lore', name: 'LoreJuego', component: Lore},
     { path: '/registro', name: 'RegistroPartidas', component: RegistroPartidas, meta: { requiresAuth: true } },
 ];
 
