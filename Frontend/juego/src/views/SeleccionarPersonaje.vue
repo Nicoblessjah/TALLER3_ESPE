@@ -3,7 +3,7 @@
     <h1>Seleccionar Personaje</h1>
     <div class="character-selection">
       <div class="player-selection">
-        <h2>Jugador 1</h2>
+        <h2>{{ username1 }}</h2>
         <div class="carousel" id="carousel1">
           <div
             v-for="character in characters"
@@ -25,7 +25,7 @@
       </div>
 
       <div class="player-selection">
-        <h2>Jugador 2</h2>
+        <h2>{{ username2 }}</h2>
         <div class="carousel" id="carousel2">
           <div
             v-for="character in characters"
@@ -68,6 +68,9 @@ export default {
     const selectedCharacter2 = ref(null);
     const selectedCharacter1Image = ref("");
     const selectedCharacter2Image = ref("");
+    const username1 = ref(localStorage.getItem("username") || "Jugador 1");
+    const username2 = ref("Jugador 2");
+
     const getCharacterImage = (character) => {
       return require(`../assets/${character.toLowerCase()}/${character.toLowerCase()}select.png`);
     };
@@ -125,6 +128,8 @@ export default {
       selectedCharacter2,
       selectedCharacter1Image,
       selectedCharacter2Image,
+      username1,
+      username2,
       getCharacterImage,
       selectCharacter,
       nextCharacter,

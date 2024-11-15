@@ -4,5 +4,11 @@
     "password": "hola",
     "winner": 0,
     "loser": 0
+  },
+  {
+    "username": "nicolas",
+    "password": "1234",
+    "winner": 3,
+    "loser": 1
   }
 ]

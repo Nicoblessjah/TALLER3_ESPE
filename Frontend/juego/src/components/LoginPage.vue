@@ -2,8 +2,20 @@
   <div class="login-container">
     <h2>Login</h2>
     <form @submit.prevent="login" class="login-form">
-      <input type="text" v-model="username" placeholder="Username" required class="pixel-input" />
-      <input type="password" v-model="password" placeholder="Password" required class="pixel-input" />
+      <input
+        type="text"
+        v-model="username"
+        placeholder="Username"
+        required
+        class="pixel-input"
+      />
+      <input
+        type="password"
+        v-model="password"
+        placeholder="Password"
+        required
+        class="pixel-input"
+      />
       <button type="submit" class="pixel-button">Login</button>
     </form>
     <router-link to="/register" class="pixel-link">Register</router-link>
@@ -11,47 +23,48 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  name: 'LoginPage',
+  name: "LoginPage",
   data() {
     return {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     };
   },
   methods: {
     async login() {
       try {
-        const response = await axios.post('http://localhost:3000/api/auth/login', {
+        const response = await axios.post("http://localhost:3000/api/auth/login", {
           username: this.username,
           password: this.password,
         });
 
         alert(response.data.message);
-        localStorage.setItem('token', response.data.token); // Almacenar el token en localStorage
-        this.$router.push('/menu');
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("username", this.username);
+        this.$router.push("/menu");
       } catch (error) {
         alert(error.response.data.message);
       }
     },
   },
   mounted() {
-    document.body.classList.add('login-background');
+    document.body.classList.add("login-background");
   },
   beforeUnmount() {
-    document.body.classList.remove('login-background');
-  }
+    document.body.classList.remove("login-background");
+  },
 };
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 body {
   margin: 0;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   background-color: transparent;
 }
 
@@ -85,7 +98,7 @@ h2 {
   border: 2px solid #fff;
   padding: 10px;
   margin: 10px 0;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   font-size: 16px;
   width: 200px;
 }
@@ -96,7 +109,7 @@ h2 {
   border: 2px solid #fff;
   padding: 10px 20px;
   cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   font-size: 16px;
   transition: background 0.3s;
 }
@@ -109,7 +122,7 @@ h2 {
   color: #ffcc00;
   margin-top: 20px;
   text-decoration: none;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   font-size: 14px;
 }
 

@@ -8,7 +8,9 @@
     <div class="container">
       <div id="fight-section">
         <div v-if="gameOver" class="game-over">
-          <h2 style="height: 0px;">Jugador {{ winner }} ha ganado!</h2>
+          <h2 style="height: 0px">
+            ¡{{ winner === 1 ? username1 : username2 }} ha ganado!
+          </h2>
         </div>
         <canvas id="hero-canvas" ref="heroCanvas"></canvas>
         <canvas id="enemy-canvas" ref="enemyCanvas"></canvas>
@@ -29,6 +31,16 @@
       <button class="btn-personajes">
         <router-link :to="{ path: '/seleccionar' }">Cambiar Personaje</router-link>
       </button>
+    </div>
+
+    <div v-if="gameOver" class="modal">
+      <div class="modal-content">
+        <h2>¿Quieres volver a jugar?</h2>
+        <button class="btn" @click="restartGame">Reiniciar pelea</button>
+        <br />
+        <button class="btn" style="left: 75px" @click="exitGame">Menu</button>
+        <button class="btn" @click="cambiarChar">Cambiar personaje</button>
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +65,8 @@ export default {
     const enemyJumping = ref(false);
     const gameOver = ref(false);
     const winner = ref(null);
+    const username1 = ref(localStorage.getItem("username") || "Jugador 1");
+    const username2 = ref("Jugador 2");
 
     const keys = {};
     const punchSound = new Audio(require("../assets/punch.mp3"));
@@ -69,14 +83,14 @@ export default {
           enemyImage.value.src = require(`../assets/${player2Character}/${player2Character}.png`);
 
           heroImage.value.onload = () =>
-              drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
+            drawCharacter(heroCanvas.value, heroImage.value, heroX.value, heroY.value);
           enemyImage.value.onload = () =>
-              drawCharacter(
-                  enemyCanvas.value,
-                  enemyImage.value,
-                  enemyX.value,
-                  enemyY.value
-              );
+            drawCharacter(
+              enemyCanvas.value,
+              enemyImage.value,
+              enemyX.value,
+              enemyY.value
+            );
         } catch (error) {
           console.error("Error al cargar la imagen:", error);
         }
@@ -88,18 +102,18 @@ export default {
     const drawCharacter = (canvas, image, x, y) => {
       const context = canvas.getContext("2d");
       context.clearRect(0, 0, canvas.width, canvas.height);
-      const spriteWidth = 18;
+      const spriteWidth = 25;
       const spriteHeight = 30;
       context.drawImage(
-          image,
-          0,
-          0,
-          spriteWidth,
-          spriteHeight,
-          x,
-          y,
-          spriteWidth,
-          spriteHeight
+        image,
+        0,
+        0,
+        spriteWidth,
+        spriteHeight,
+        x,
+        y,
+        spriteWidth,
+        spriteHeight
       );
     };
 
@@ -114,7 +128,59 @@ export default {
     };
 
     const getRandomDamage = () => {
-      return Math.floor(Math.random() * (5 - 1 + 1)) + 1;  // Rango de 1 a 5
+      return Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+    };
+
+    const updateUserStats = async (username, hasWon) => {
+      try {
+        const response = await fetch("http://localhost:3000/api/auth/update-stats", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ username, hasWon }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          console.error("Error al actualizar estadísticas:", data.message);
+        } else {
+          console.log("Estadísticas actualizadas con éxito:", data.message);
+        }
+      } catch (error) {
+        console.error("Error de red al actualizar estadísticas:", error);
+      }
+    };
+
+    const handleGameOver = () => {
+      if (winner.value === 1) {
+        updateUserStats(username1.value, true);
+        updateUserStats(username2.value, false);
+      } else if (winner.value === 2) {
+        updateUserStats(username2.value, true);
+        updateUserStats(username1.value, false);
+      }
+    };
+
+    const restartGame = () => {
+      heroHealth.value = 100;
+      enemyHealth.value = 100;
+      heroX.value = 10;
+      heroY.value = 100;
+      enemyX.value = 110;
+      enemyY.value = 100;
+      gameOver.value = false;
+      winner.value = null;
+
+      loadCharacters();
+    };
+
+    const exitGame = () => {
+      window.location.href = "/menu";
+    };
+
+    const cambiarChar = () => {
+      window.location.href = "/seleccionar";
     };
 
     const attack = (x, y, player) => {
@@ -124,11 +190,11 @@ export default {
       const enemyHeight = 30;
 
       if (
-          player === "hero" &&
-          x + heroWidth > enemyX.value &&
-          x < enemyX.value + enemyWidth &&
-          y + heroHeight > enemyY.value &&
-          y < enemyY.value + enemyHeight
+        player === "hero" &&
+        x + heroWidth > enemyX.value &&
+        x < enemyX.value + enemyWidth &&
+        y + heroHeight > enemyY.value &&
+        y < enemyY.value + enemyHeight
       ) {
         const damage = getRandomDamage();
         enemyHealth.value -= damage;
@@ -137,13 +203,14 @@ export default {
         if (enemyHealth.value <= 0) {
           winner.value = 1;
           gameOver.value = true;
+          handleGameOver();
         }
       } else if (
-          player === "enemy" &&
-          x + heroWidth > heroX.value &&
-          x < heroX.value + heroWidth &&
-          y + heroHeight > heroY.value &&
-          y < heroY.value + heroHeight
+        player === "enemy" &&
+        x + heroWidth > heroX.value &&
+        x < heroX.value + heroWidth &&
+        y + heroHeight > heroY.value &&
+        y < heroY.value + heroHeight
       ) {
         const damage = getRandomDamage();
         heroHealth.value -= damage;
@@ -152,6 +219,7 @@ export default {
         if (heroHealth.value <= 0) {
           winner.value = 2;
           gameOver.value = true;
+          handleGameOver();
         }
       }
     };
@@ -212,13 +280,17 @@ export default {
       enemyHealth,
       heroCanvas,
       enemyCanvas,
+      username1,
+      username2,
       gameOver,
       winner,
+      cambiarChar,
+      restartGame,
+      exitGame,
     };
   },
 };
 </script>
-
 
 <style scoped>
 h1 {
@@ -310,6 +382,57 @@ button {
   color: #ffffff;
   font-size: 24px;
   margin-top: 20px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  position: relative;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 15px;
+  cursor: pointer;
+  margin: 10px;
+  position: relative;
+}
+
+.btn {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  margin: 10px;
+  position: relative;
+  font-family: "Press Start 2P", cursive;
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+button:hover {
+  background: #ffcc00;
+  border-color: #ffcc00;
 }
 </style>
 

@@ -10,27 +10,27 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue';
+import NavBar from "@/components/NavBar.vue";
 
 export default {
-  name: 'MenuJuego',
+  name: "MenuJuego",
   components: {
-    NavBar
+    NavBar,
   },
   mounted() {
-    document.body.classList.add('menu-background');
+    document.body.classList.add("menu-background");
   },
   beforeUnmount() {
-    document.body.classList.remove('menu-background');
-  }
-}
+    document.body.classList.remove("menu-background");
+  },
+};
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 h1 {
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   color: #fff;
   font-size: 30px;
   margin-bottom: 30px;
@@ -54,7 +54,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px; /* Añadir un margen inferior para espaciar el botón */
+  margin-bottom: 20px;
 }
 
 .menu-link {
@@ -63,7 +63,7 @@ h1 {
   border: 2px solid #fff;
   padding: 15px 30px;
   margin: 10px;
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
   font-size: 16px;
   text-decoration: none;
   display: block;
