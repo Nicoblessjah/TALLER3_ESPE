@@ -36,9 +36,9 @@
     <div v-if="gameOver" class="modal">
       <div class="modal-content">
         <h2>¿Quieres volver a jugar?</h2>
-        <button class="btn" @click="restartGame">Reiniciar pelea</button>
+        <button class="btn" style="left: 20px;" @click="restartGame">Reiniciar pelea</button>
         <br />
-        <button class="btn" style="left: 75px" @click="exitGame">Menu</button>
+        <button class="btn" style="left: 105px" @click="exitGame">Menu</button>
         <button class="btn" @click="cambiarChar">Cambiar personaje</button>
       </div>
     </div>
