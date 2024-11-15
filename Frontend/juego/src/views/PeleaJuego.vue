@@ -165,9 +165,9 @@ export default {
     const restartGame = () => {
       heroHealth.value = 100;
       enemyHealth.value = 100;
-      heroX.value = 10;
+      heroX.value = 20;
       heroY.value = 100;
-      enemyX.value = 110;
+      enemyX.value = 150;
       enemyY.value = 100;
       gameOver.value = false;
       winner.value = null;
@@ -227,19 +227,22 @@ export default {
     const updateGame = () => {
       if (gameOver.value) return;
 
-      if (keys["a"]) heroX.value -= 2;
-      if (keys["d"]) heroX.value += 2;
+      const heroCanvasWidth = heroCanvas.value.width;
+      const enemyCanvasWidth = enemyCanvas.value.width;
+
+      if (keys["a"] && heroX.value > 0) heroX.value -= 2;
+      if (keys["d"] && heroX.value < heroCanvasWidth - 25) heroX.value += 2;
       if (keys["w"] && !heroJumping.value) {
         heroJumping.value = true;
-        heroY.value -= 30;
+        heroY.value = Math.max(0, heroY.value - 30);
       }
       if (keys[" "] || keys["Space"]) attack(heroX.value, heroY.value, "hero");
 
-      if (keys["ArrowLeft"]) enemyX.value -= 2;
-      if (keys["ArrowRight"]) enemyX.value += 2;
+      if (keys["ArrowLeft"] && enemyX.value > 0) enemyX.value -= 2;
+      if (keys["ArrowRight"] && enemyX.value < enemyCanvasWidth - 25) enemyX.value += 2;
       if (keys["ArrowUp"] && !enemyJumping.value) {
         enemyJumping.value = true;
-        enemyY.value -= 30;
+        enemyY.value = Math.max(0, enemyY.value - 30);
       }
       if (keys["Enter"]) attack(enemyX.value, enemyY.value, "enemy");
 
@@ -253,13 +256,13 @@ export default {
     onMounted(() => {
       loadCharacters();
 
-      heroCanvas.value.width = 150;
+      heroCanvas.value.width = 200;
       heroCanvas.value.height = 150;
-      enemyCanvas.value.width = 150;
+      enemyCanvas.value.width = 200;
       enemyCanvas.value.height = 150;
 
-      heroX.value = 10;
-      enemyX.value = 110;
+      heroX.value = 20;
+      enemyX.value = 150;
 
       document.body.classList.add("fight-background");
 
@@ -305,8 +308,9 @@ h1 {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 80%;
+  height: 90%;
   flex-direction: column;
+  position: relative;
 }
 
 #fight-section {
@@ -324,20 +328,20 @@ canvas {
 }
 
 .health-bar {
-  position: relative;
-  width: 45%;
-  height: 20px;
+  position: absolute;
+  width: 100px;
+  height: 10px;
   background-color: #ccc;
   border: 1px solid #000;
-  margin: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   box-sizing: border-box;
+  z-index: 1;
 }
 
 .health {
   height: 100%;
   background-color: #4caf50;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .status {
@@ -348,11 +352,12 @@ canvas {
 }
 
 #hero-health-bar {
-  align-self: flex-start;
+  top: 10px;
+  right: 550px;
 }
-
 #enemy-health-bar {
-  align-self: flex-end;
+  top: 10px;
+  left: 550px;
 }
 
 .buttons {
