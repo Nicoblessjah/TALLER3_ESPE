@@ -88,7 +88,7 @@ export default {
     const drawCharacter = (canvas, image, x, y) => {
       const context = canvas.getContext("2d");
       context.clearRect(0, 0, canvas.width, canvas.height);
-      const spriteWidth = 25;
+      const spriteWidth = 18;
       const spriteHeight = 30;
       context.drawImage(
           image,
@@ -145,7 +145,7 @@ export default {
           y + heroHeight > heroY.value &&
           y < heroY.value + heroHeight
       ) {
-        const damage = getRandomDamage();  
+        const damage = getRandomDamage();
         heroHealth.value -= damage;
         punchSound.play();
         console.log(`¡Daño al héroe! -${damage}`);
