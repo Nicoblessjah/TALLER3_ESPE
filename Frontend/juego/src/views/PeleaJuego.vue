@@ -102,8 +102,8 @@ export default {
     const drawCharacter = (canvas, image, x, y) => {
       const context = canvas.getContext("2d");
       context.clearRect(0, 0, canvas.width, canvas.height);
-      const spriteWidth = 25;
-      const spriteHeight = 30;
+      const spriteWidth = 22;
+      const spriteHeight = 35;
       context.drawImage(
         image,
         0,
