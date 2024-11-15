@@ -55,6 +55,7 @@ export default {
     const winner = ref(null);
 
     const keys = {};
+    const punchSound = new Audio(require("../assets/punch.mp3"));
 
     const loadCharacters = () => {
       const player1Character = localStorage.getItem("player1Character");
@@ -120,6 +121,7 @@ export default {
           y < enemyY.value + 150
       ) {
         enemyHealth.value -= 10;
+        punchSound.play();
         if (enemyHealth.value <= 0) {
           winner.value = 1;
           gameOver.value = true;
@@ -131,6 +133,7 @@ export default {
           y < heroY.value + 150
       ) {
         heroHealth.value -= 10;
+        punchSound.play();
         if (heroHealth.value <= 0) {
           winner.value = 2;
           gameOver.value = true;
@@ -200,6 +203,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 h1 {
