@@ -9,6 +9,7 @@
           <p>Derrotas: {{ user.loser }}</p>
         </div>
       </div>
+      <router-link to="/menu" class="back-button">Volver</router-link>
     </div>
   </div>
 </template>
@@ -100,5 +101,25 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.back-button {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 15px 30px;
+  margin-top: 20px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.back-button:hover {
+  background: #ffcc00;
+  border-color: #ffcc00;
 }
 </style>
