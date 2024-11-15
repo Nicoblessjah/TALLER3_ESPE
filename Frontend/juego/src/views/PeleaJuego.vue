@@ -329,8 +329,8 @@ canvas {
 
 .health-bar {
   position: absolute;
-  width: 100px;
-  height: 10px;
+  width: 250px;
+  height: 20px;
   background-color: #ccc;
   border: 1px solid #000;
   border-radius: 5px;
